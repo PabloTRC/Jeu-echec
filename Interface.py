@@ -17,6 +17,12 @@ class Chessboard:
             pyxel.quit()
 
     def draw(self):
+        pyxel.cls(0)
+        self.draw_chessboard()
+        self.draw_white_pawns()
+        self.draw_black_pawns()
+
+    def draw_chessboard (self):
         for line in range(LINES):
             for col in range(COLUMNS):
                 if line% 2 == 0 and col%2 == 1:
@@ -26,14 +32,17 @@ class Chessboard:
                 else : 
                     color = WHITE
                 pyxel.rect(line*SIDE, col*SIDE, SIDE, SIDE, color)
-        #white pawns
+    
+    def draw_white_pawns(self):
         col = 6
         for line in range(LINES):
             pyxel.blt(line*SIDE,col*SIDE,1,0,0,SIDE,SIDE, colkey=BLACK)
-        #black pawns
+    
+    def draw_black_pawns(self):
         col = 1
         for line in range(LINES):
             pyxel.blt(line*SIDE,col*SIDE,0,0,0,SIDE,SIDE, colkey=BLACK)
+    
 
 
 
