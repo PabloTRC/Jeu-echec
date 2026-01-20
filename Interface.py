@@ -10,6 +10,7 @@ class Chessboard:
     def __init__(self):
         pyxel.init(LINES*SIDE,COLUMNS*SIDE,title = "Chess")
         pyxel.load("pions.pyxres")
+        pyxel.mouse(True)
         pyxel.run(self.update, self.draw)
     
     def update(self):
@@ -97,6 +98,7 @@ class Chessboard:
         line = 3
         pyxel.blt(line*SIDE,col*SIDE,0,2*SIDE,0,SIDE,SIDE, colkey=BLACK)
         
+
 
     
 
