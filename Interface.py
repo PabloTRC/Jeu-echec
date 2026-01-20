@@ -21,6 +21,14 @@ class Chessboard:
         self.draw_chessboard()
         self.draw_white_pawns()
         self.draw_black_pawns()
+        self.draw_white_tower()
+        self.draw_black_tower()
+        self.draw_white_horse()
+        self.draw_black_horse()
+        self.draw_white_bishop()
+        self.draw_black_bishop()
+        self.draw_white_monarchs()
+        self.draw_black_monarchs()
 
     def draw_chessboard (self):
         for line in range(LINES):
@@ -42,6 +50,56 @@ class Chessboard:
         col = 1
         for line in range(LINES):
             pyxel.blt(line*SIDE,col*SIDE,0,0,0,SIDE,SIDE, colkey=BLACK)
+    
+    def draw_white_tower(self):
+        col = 7
+        for line in [0,7]:
+            pyxel.blt(line*SIDE,col*SIDE,1,0,0,SIDE,SIDE, colkey=BLACK)
+    
+    def draw_black_tower(self):
+        col = 0
+        for line in [0,7]:
+            pyxel.blt(line*SIDE,col*SIDE,0,0,0,SIDE,SIDE, colkey=BLACK)
+    
+    def draw_white_horse(self):
+        col = 7
+        for line in [1,6]:
+            pyxel.blt(line*SIDE,col*SIDE,1,0,0,SIDE,SIDE, colkey=BLACK)
+    
+    def draw_black_horse(self):
+        col = 0
+        for line in [1,6]:
+            pyxel.blt(line*SIDE,col*SIDE,0,0,0,SIDE,SIDE, colkey=BLACK)
+        
+    def draw_white_bishop(self):
+        col = 7
+        for line in [2,5]:
+            pyxel.blt(line*SIDE,col*SIDE,1,0,0,SIDE,SIDE, colkey=BLACK)
+    
+    def draw_black_bishop(self):
+        col = 0
+        for line in [2,5]:
+            pyxel.blt(line*SIDE,col*SIDE,0,0,0,SIDE,SIDE, colkey=BLACK)
+    
+    def draw_white_monarchs(self):
+        col = 7
+        #king
+        line = 4
+        pyxel.blt(line*SIDE,col*SIDE,1,0,0,SIDE,SIDE, colkey=BLACK)
+        #queen
+        line = 3
+        pyxel.blt(line*SIDE,col*SIDE,1,0,0,SIDE,SIDE, colkey=BLACK)
+    
+    def draw_black_monarchs(self):
+        col = 0
+        #king
+        line = 4
+        pyxel.blt(line*SIDE,col*SIDE,0,0,0,SIDE,SIDE, colkey=BLACK)
+        #queen
+        line = 3
+        pyxel.blt(line*SIDE,col*SIDE,0,0,0,SIDE,SIDE, colkey=BLACK)
+        
+
     
 
 
