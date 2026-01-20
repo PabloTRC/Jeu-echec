@@ -9,6 +9,7 @@ SIDE = 16
 class Chessboard:
     def __init__(self):
         pyxel.init(LINES*SIDE,COLUMNS*SIDE,title = "Chess")
+        pyxel.load("res.pyxres")
         pyxel.run(self.update, self.draw)
     
     def update(self):
@@ -25,6 +26,16 @@ class Chessboard:
                 else : 
                     color = WHITE
                 pyxel.rect(line*SIDE, col*SIDE, SIDE, SIDE, color)
+        #white pawns
+        col = 6
+        for line in range(LINES):
+            pyxel.blt(line*SIDE,col*SIDE,1,0,0,SIDE,SIDE, colkey=BLACK)
+        #black pawns
+        col = 1
+        for line in range(LINES):
+            pyxel.blt(line*SIDE,col*SIDE,0,0,0,SIDE,SIDE, colkey=BLACK)
+
+
 
 if __name__ == "__main__":
     Chessboard()
