@@ -10,3 +10,6 @@ pyxel studio (site en ligne pour démarrer pyxel)
 class game créée
 class pieces 
 class gameboard 
+Commande pour modifier un fichier pyxres : uvx pyxel edit "nom".pyxres
+Commande pour charger un fichier pyxres : pyxel.load()
+Documentation des Key : cf documentation pyxel 2023 TOUT à la fin
