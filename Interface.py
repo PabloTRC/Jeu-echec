@@ -1,32 +1,30 @@
 import pyxel 
 
-WIDTH = 30
-HEIGHT = 30
 BLACK = 0
 WHITE = 7
+LINES = 8
+COLUMNS = 8
+SIDE = 16
 
-def checkers():
-    checkers = set()
-    for y in range(HEIGHT):
-        for x in range(WIDTH):
-            if (x+y) % 2 == 0 :
-                checkers.add((x,y))
-    return checkers
+class Chessboard:
+    def __init__(self):
+        pyxel.init(LINES*SIDE,COLUMNS*SIDE,title = "Chess")
+        pyxel.run(self.update, self.draw)
+    
+    def update(self):
+        if pyxel.btnp(pyxel.KEY_Q):
+            pyxel.quit()
 
-def display(color, pixels=None):
-    if pixels is None:
-        pyxel.cls(color)
-    elif len(pixels) >= 1 and type(pixels[0]) == int:
-        display(color, [pixels])
-    else:
-        for x, y in pixels:
-            pyxel.pset(x, y, color)
+    def draw(self):
+        for line in range(LINES):
+            for col in range(COLUMNS):
+                if line% 2 == 0 and col%2 == 1:
+                    color = BLACK
+                elif line%2==1 and col%2==0 :
+                    color = BLACK
+                else : 
+                    color = WHITE
+                pyxel.rect(line*SIDE, col*SIDE, SIDE, SIDE, color)
 
-def draw_maze(maze):
-    display(BLACK)
-    display(WHITE, maze)
-
-pyxel.init(WIDTH, HEIGHT)
-draw_maze(checkers())
-pyxel.show()
-
+if __name__ == "__main__":
+    Chessboard()
