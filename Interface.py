@@ -33,9 +33,7 @@ class Chessboard:
     def draw_chessboard (self):
         for line in range(LINES):
             for col in range(COLUMNS):
-                if line% 2 == 0 and col%2 == 1:
-                    color = BLACK
-                elif line%2==1 and col%2==0 :
+                if (col+line)%2==1:
                     color = BLACK
                 else : 
                     color = WHITE
