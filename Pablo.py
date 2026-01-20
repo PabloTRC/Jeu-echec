@@ -15,6 +15,7 @@ class Chessboard:
     def __init__(self):
         pyxel.init(LINES*SIDE,COLUMNS*SIDE,title = "Chess")
         pyxel.load("pions.pyxres")
+        pyxel.mouse(True)
         pyxel.run(self.update, self.draw)
     
     def update(self):
@@ -22,7 +23,11 @@ class Chessboard:
             pyxel.quit()
         self.interaction()
     
-    def interaction():
+    def interaction(self):
+        if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
+            (x,y)=pyxel.mouse_x//16, pyxel.mouse_y//16
+            print(x,y)
+
         
 
     def draw(self):
