@@ -9,7 +9,7 @@ SIDE = 16
 class Chessboard:
     def __init__(self):
         pyxel.init(LINES*SIDE,COLUMNS*SIDE,title = "Chess")
-        pyxel.load("res.pyxres")
+        pyxel.load("pions.pyxres")
         pyxel.run(self.update, self.draw)
     
     def update(self):
