@@ -103,10 +103,10 @@ class Chessboard:
                 U+=1
             elif fou :
                 U+=1
-            
+
             if U!=1:
                 return False
-            return 
+            return True
         
         
 
