@@ -113,7 +113,7 @@ class Chessboard:
         for i in range (8):
             for j in range(8):
                 Cas=self.cases[(i,j)]
-                if Cas[2]!='':
+                if Cas[1]!='':
                     self.drawbis(Cas[1],i,j,Cas[2]) #Nom pièce, position, couleur
 
     def drawbis(self,piece,x,y,Couleur):
