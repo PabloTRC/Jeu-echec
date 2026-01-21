@@ -5,7 +5,7 @@
 #Affichage en fonction du dico
 import pyxel
 import pathlib
-
+import numpy as np
 import pyxel 
 
 BLACK = 0
@@ -95,15 +95,24 @@ class Chessboard:
             if x1!=x2 and y1==y2:
                 return True
             return False
+        if piece[1] == 'f':
+            if np.abs(self.click2[0]-self.click1[0]) != np.abs(self.click2[1] - self.click1[1]) :
+                return False 
+            return True
+        if piece[1] == 'r':
+            if (np.abs(self.click2[0]-self.click1[0])!=0 and np.abs(self.click2[0]-self.click1[0])!=1):
+                return False 
+            if (np.abs(self.click2[1]-self.click1[1])!=0 and np.abs(self.click2[1]-self.click1[1])!=1):
+                return False
+            return True 
         if piece[1]=='d':
             U=0
             if x1==x2 and y1!=y2:
                 U+=1
             elif x1!=x2 and y1==y2:
                 U+=1
-            elif fou :
-                U+=1
-
+            elif np.abs(self.click2[0]-self.click1[0]) == np.abs(self.click2[1] - self.click1[1]) :
+                U+=1 
             if U!=1:
                 return False
             return True
