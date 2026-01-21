@@ -75,7 +75,7 @@ class Chessboard:
         if self.click2!=None:
             if self.deplacement() and self.coup_valide():
                 self.cases[self.click2]=self.cases[self.click1]
-                self.cases[self.click1]=[0,'',3]
+                self.cases[self.click1]=[0,'',3,self.cases[self.click2][2]+1]
                 self.Nombre_coups+=1
 
     def deplacement(self):
