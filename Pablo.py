@@ -34,7 +34,7 @@ class Chessboard:
         self.interaction()
         
     def cases_ini(self):
-        cases = {(x,y):[0,0,0] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc]
+        cases = {(x,y):[0,0,3] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc]
         y = 1
         for x in range(LINES):
             cases[(x,y)] = [1,"p",0]
@@ -74,7 +74,7 @@ class Chessboard:
         if self.click2!=None and self.click2!=self.click1:
             if self.coup_valide():
                 self.cases[self.click2]=self.cases[self.click1]
-                self.cases[self.click1]=[0,'',0]
+                self.cases[self.click1]=[0,'',3]
                 self.Nombre_coup+=1
 
     def coup_valide(self):
@@ -96,13 +96,13 @@ class Chessboard:
                 return True
             return False
         if piece[1] == 'f':
-            if np.abs(self.click2[0]-self.click1[0]) != np.abs(self.click2[1] - self.click1[1]) :
+            if np.abs(x2-x1) != np.abs(y2 - y1) :
                 return False 
             return True
         if piece[1] == 'r':
-            if (np.abs(self.click2[0]-self.click1[0])!=0 and np.abs(self.click2[0]-self.click1[0])!=1):
+            if (np.abs(x2-x1)!=0 and np.abs(x2-x1)!=1):
                 return False 
-            if (np.abs(self.click2[1]-self.click1[1])!=0 and np.abs(self.click2[1]-self.click1[1])!=1):
+            if (np.abs(y2-y1)!=0 and np.abs(y2-y1)!=1):
                 return False
             return True 
         if piece[1]=='d':
@@ -111,10 +111,22 @@ class Chessboard:
                 U+=1
             elif x1!=x2 and y1==y2:
                 U+=1
-            elif np.abs(self.click2[0]-self.click1[0]) == np.abs(self.click2[1] - self.click1[1]) :
+            elif np.abs(x2-x1) == np.abs(y2 - y1) :
                 U+=1 
             if U!=1:
                 return False
+            return True
+        if piece[1] == "c":
+            if (np.abs(x2-x1)!=1 and np.abs(x2-x1)!=2):
+                return False 
+            if (np.abs(y2-y1)!=1 and np.abs(y2-y1)!=2):
+                return False 
+            if np.abs(x2-x1)==1:
+                if np.abs(y2-y1)!=2:
+                          return False
+            if np.abs(x2-x1)==2:
+                if np.abs(y2-y1)!=1:
+                          return False  
             return True
         
         
