@@ -16,6 +16,12 @@ class Chessboard:
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
+        self.interaction()
+    
+    def interaction(self):
+        if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
+            (x1,y1)=pyxel.mouse_x//16, pyxel.mouse_y//16
+            print(x1,y1)
 
     def draw(self):
         pyxel.cls(0)
