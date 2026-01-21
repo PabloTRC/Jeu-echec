@@ -96,6 +96,18 @@ class Chessboard:
             if (np.abs(self.click2[1]-self.click1[1])!=0 and np.abs(self.click2[1]-self.click1[1])!=1):
                 return False
             return True 
+        if piece[1] == "c":
+            if (np.abs(self.click2[0]-self.click1[0])!=1 and np.abs(self.click2[0]-self.click1[0])!=2):
+                return False 
+            if (np.abs(self.click2[1]-self.click1[1])!=1 and np.abs(self.click2[1]-self.click1[1])!=2):
+                return False 
+            if np.abs(self.click2[0]-self.click1[0])==1:
+                if np.abs(self.click2[1]-self.click1[1])!=2:
+                          return False
+            if np.abs(self.click2[0]-self.click1[0])==2:
+                if np.abs(self.click2[1]-self.click1[1])!=1:
+                          return False  
+            return True
         
 
 
