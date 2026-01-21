@@ -70,6 +70,21 @@ class Chessboard:
             else:
                 self.click2=(x,y)
                 self.first_click_done=False
+        if self.click2!=None:
+            if self.coup_valide():
+                self.cases[self.click2]=self.cases[self.click1]
+                self.cases[self.click1]=[0,'',0]
+
+    def coup_valide(self):
+        piece=self.cases[self.click1]
+        if piece[1] =='p':
+            if self.click1[0]!=self.click2[0]:
+                return False
+            if piece[2]==1 and self.click1[1]<=self.click2[1]:
+                return False
+            if piece[2]==0 and self.click1[1]>=self.click2[1]:
+                return False
+            return True
         
 
 
