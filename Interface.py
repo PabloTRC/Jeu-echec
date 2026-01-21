@@ -89,11 +89,9 @@ class Chessboard:
                 return False
             return True
         if piece[1]=='t':
-            if x1==x2 and y1!=y2:
-                return True
-            if x1!=x2 and y1==y2:
-                return True
-            return False
+            if x1!=x2 and y1!=y2:
+                return False
+            return True
         if piece[1] == 'f':
             if np.abs(x2-x1) != np.abs(y2 - y1) :
                 return False 
@@ -133,10 +131,28 @@ class Chessboard:
         (x2,y2)=self.click2
         moi=self.cases[self.click1]
         pas_moi = self.cases[self.click2]
+        if moi[1]=="t":
+            if y2-y1>0:
+                for y in range(1,y2-y1):
+                    if self.cases[(x1,y1+y)][1]!=" ":
+                        return False 
+            if y2-y1<0:
+                for y in range(1,y1-y2):
+                    if self.cases[(x1,y1-y)][1]!=" ":
+                        return False
+            if x2-x1>0:
+                for x in range(1,x2-x1):
+                    if self.cases[(x1+x,y1)][1]!=" ":
+                        return False 
+            if x2-x1<0:
+                for x in range(1,x1-x2):
+                    if self.cases[(x1-x,y1)][1]!=" ":
+                        return False     
+            return True
         if pas_moi[2] == moi[2]:
             return False 
-        return True 
-
+        return True
+        
 
 
 
