@@ -11,7 +11,40 @@ class Chessboard:
         pyxel.init(LINES*SIDE,COLUMNS*SIDE,title = "Chess")
         pyxel.load("pions.pyxres")
         pyxel.mouse(True)
+        self.cases_ini()
         pyxel.run(self.update, self.draw)
+    
+    def cases_ini(self):
+        cases = {(x,y):[0,0,0] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc]
+        y = 1
+        for x in range(LINES):
+            cases[(x,y)] = [1,"p",0]
+        y = 6
+        for x in range(LINES):
+            cases[(x,y)] = [1,"p",1]
+        y=0
+        for x in [0,7]:
+            cases[(x,y)]=[1,"t",0]
+        for x in [1,6]:
+            cases[(x,y)]=[1,"c",0]
+        for x in [2,5]:
+            cases[(x,y)]=[1,"f",0]
+        cases[(3,y)]=[1,"d",0]
+        cases[(4,y)]=[1,"r",0]
+        y=6
+        for x in [0,7]:
+            cases[(x,y)]=[1,"t",1]
+        for x in [1,6]:
+            cases[(x,y)]=[1,"c",1]
+        for x in [2,5]:
+            cases[(x,y)]=[1,"f",1]
+        cases[(3,y)]=[1,"d",1]
+        cases[(4,y)]=[1,"r",1]
+        print(cases)
+
+
+
+
     
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
