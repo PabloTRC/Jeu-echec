@@ -38,28 +38,28 @@ class Chessboard:
         cases = {(x,y):[0,'',3,0] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc 3 si pas occupé, 0 pour le nombre de fois utilisé]
         y = 1
         for x in range(LINES):
-            cases[(x,y)] = [1,"p",0]
+            cases[(x,y)] = [1,"p",0,0]
         y = 6
         for x in range(LINES):
-            cases[(x,y)] = [1,"p",1]
+            cases[(x,y)] = [1,"p",1,0]
         y=0
         for x in [0,7]:
-            cases[(x,y)]=[1,"t",0]
+            cases[(x,y)]=[1,"t",0,0]
         for x in [1,6]:
-            cases[(x,y)]=[1,"c",0]
+            cases[(x,y)]=[1,"c",0,0]
         for x in [2,5]:
-            cases[(x,y)]=[1,"f",0]
-        cases[(3,y)]=[1,"d",0]
-        cases[(4,y)]=[1,"r",0]
+            cases[(x,y)]=[1,"f",0,0]
+        cases[(3,y)]=[1,"d",0,0]
+        cases[(4,y)]=[1,"r",0,0]
         y=7
         for x in [0,7]:
-            cases[(x,y)]=[1,"t",1]
+            cases[(x,y)]=[1,"t",1,0]
         for x in [1,6]:
-            cases[(x,y)]=[1,"c",1]
+            cases[(x,y)]=[1,"c",1,0]
         for x in [2,5]:
-            cases[(x,y)]=[1,"f",1]
-        cases[(3,y)]=[1,"d",1]
-        cases[(4,y)]=[1,"r",1]
+            cases[(x,y)]=[1,"f",1,0]
+        cases[(3,y)]=[1,"d",1,0]
+        cases[(4,y)]=[1,"r",1,0]
         return cases
    
     def interaction(self):
@@ -74,8 +74,8 @@ class Chessboard:
                 self.first_click_done=False
         if self.click2!=None:
             if self.deplacement() and self.coup_valide():
-                self.cases[self.click2]=self.cases[self.click1]
-                self.cases[self.click1]=[0,'',3,self.cases[self.click2][2]+1]
+                self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
+                self.cases[self.click1]=[0,'',3,0]
                 self.Nombre_coups+=1
 
     def deplacement(self):
@@ -83,18 +83,28 @@ class Chessboard:
         (x1,y1)=self.click1
         (x2,y2)=self.click2
         if piece[1] =='p': #A part
-            if x1!=x2:
-                return False
-            if piece[2]==1 and y1<=y2:
-                return False
-            if piece[2]==0 and y1>=y2:
-                return False
-            if np.abs(y1-y2)>1:
-                return False
-            if self.cases[self.click2][0]==1:
-                return False
-            
-            return True
+            if piece[3]==0:
+                if x1!=x2:
+                    return False
+                if piece[2]==1 and y1<=y2:
+                    return False
+                if piece[2]==0 and y1>=y2:
+                    return False
+                if np.abs(y1-y2)>2:
+                    return False
+                return True
+            else: 
+                if x1!=x2:
+                    return False
+                if piece[2]==1 and y1<=y2:
+                    return False
+                if piece[2]==0 and y1>=y2:
+                    return False
+                if np.abs(y1-y2)>1:
+                    return False
+                if self.cases[self.click2][0]==1:
+                    return False
+                return True
         if piece[1]=='t':
             if x1==x2 and y1!=y2:
                 return True
@@ -140,8 +150,26 @@ class Chessboard:
         (x2,y2)=self.click2
         moi=self.cases[self.click1]
         pas_moi = self.cases[self.click2]
-        if pas_moi[2] == moi[2]:
-            return False 
+        if moi[1]=="t" and (np.abs(y2-y1)>1 or np.abs(x2-x1)>1):
+            if y2-y1>0:
+                for i in range(1,y2-y1):
+                    if self.cases[(x1,y1+i)][0]==1:
+                        return False 
+            if y1-y2>0:
+                for i in range(1,y1-y2):
+                    if self.cases[(x1,y1-i)][0]==1:
+                        return False
+            if x2-x1>0:
+                for i in range(1,x2-x1):
+                    if self.cases[(x1+i,y1)][0]==1:
+                        return False 
+            if x1-x2>0:
+                for i in range(1,x1-x2):
+                    if self.cases[(x1-i,y1)][0]==1:
+                        return False
+            return True 
+        if moi[2]==pas_moi[2]:
+            return False
         return True 
 
 
