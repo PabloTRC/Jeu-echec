@@ -34,7 +34,7 @@ class Chessboard:
         self.interaction()
         
     def cases_ini(self):
-        cases = {(x,y):[0,0,0] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc]
+        cases = {(x,y):[0,0,3] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc]
         y = 1
         for x in range(LINES):
             cases[(x,y)] = [1,"p",0]
@@ -72,43 +72,71 @@ class Chessboard:
                 self.click2=(x,y)
                 self.first_click_done=False
         if self.click2!=None:
-            if self.coup_valide():
+            if self.deplacement() and self.coup_valide():
                 self.cases[self.click2]=self.cases[self.click1]
-                self.cases[self.click1]=[0,'',0]
+                self.cases[self.click1]=[0,'',3]
 
-    def coup_valide(self):
+    def deplacement(self):
         piece=self.cases[self.click1]
+        (x1,y1)=self.click1
+        (x2,y2)=self.click2
         if piece[1] =='p':
-            if self.click1[0]!=self.click2[0]:
+            if x1!=x2:
                 return False
-            if piece[2]==1 and self.click1[1]<=self.click2[1]:
+            if piece[2]==1 and y1<=y2:
                 return False
-            if piece[2]==0 and self.click1[1]>=self.click2[1]:
+            if piece[2]==0 and y1>=y2:
                 return False
             return True
+        if piece[1]=='t':
+            if x1==x2 and y1!=y2:
+                return True
+            if x1!=x2 and y1==y2:
+                return True
+            return False
         if piece[1] == 'f':
-            if np.abs(self.click2[0]-self.click1[0]) != np.abs(self.click2[1] - self.click1[1]) :
+            if np.abs(x2-x1) != np.abs(y2 - y1) :
                 return False 
             return True
         if piece[1] == 'r':
-            if (np.abs(self.click2[0]-self.click1[0])!=0 and np.abs(self.click2[0]-self.click1[0])!=1):
+            if (np.abs(x2-x1)!=0 and np.abs(x2-x1)!=1):
                 return False 
-            if (np.abs(self.click2[1]-self.click1[1])!=0 and np.abs(self.click2[1]-self.click1[1])!=1):
+            if (np.abs(y2-y1)!=0 and np.abs(y2-y1)!=1):
                 return False
             return True 
+        if piece[1]=='d':
+            U=0
+            if x1==x2 and y1!=y2:
+                U+=1
+            elif x1!=x2 and y1==y2:
+                U+=1
+            elif np.abs(x2-x1) == np.abs(y2 - y1) :
+                U+=1 
+            if U!=1:
+                return False
+            return True
         if piece[1] == "c":
-            if (np.abs(self.click2[0]-self.click1[0])!=1 and np.abs(self.click2[0]-self.click1[0])!=2):
+            if (np.abs(x2-x1)!=1 and np.abs(x2-x1)!=2):
                 return False 
-            if (np.abs(self.click2[1]-self.click1[1])!=1 and np.abs(self.click2[1]-self.click1[1])!=2):
+            if (np.abs(y2-y1)!=1 and np.abs(y2-y1)!=2):
                 return False 
-            if np.abs(self.click2[0]-self.click1[0])==1:
-                if np.abs(self.click2[1]-self.click1[1])!=2:
+            if np.abs(x2-x1)==1:
+                if np.abs(y2-y1)!=2:
                           return False
-            if np.abs(self.click2[0]-self.click1[0])==2:
-                if np.abs(self.click2[1]-self.click1[1])!=1:
+            if np.abs(x2-x1)==2:
+                if np.abs(y2-y1)!=1:
                           return False  
             return True
-        
+    
+    def coup_valide(self):
+        (x1,y1)=self.click1
+        (x2,y2)=self.click2
+        moi=self.cases[self.click1]
+        pas_moi = self.cases[self.click2]
+        if pas_moi[2] == moi[2]:
+            return False 
+        return True 
+
 
 
 
