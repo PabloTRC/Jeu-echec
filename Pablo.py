@@ -19,6 +19,7 @@ class Chessboard:
         pyxel.init(LINES*SIDE,COLUMNS*SIDE,title = "Chess")
         pyxel.load("pions.pyxres")
         pyxel.mouse(True)
+        self.Nombre_coup=0
         self.click1=None
         self.click2=None
         self.first_click_done=False
@@ -70,21 +71,43 @@ class Chessboard:
             else:
                 self.click2=(x,y)
                 self.first_click_done=False
-        if self.click2!=None:
+        if self.click2!=None and self.click2!=self.click1:
             if self.coup_valide():
                 self.cases[self.click2]=self.cases[self.click1]
                 self.cases[self.click1]=[0,'',0]
+                self.Nombre_coup+=1
 
     def coup_valide(self):
         piece=self.cases[self.click1]
+        (x1,y1)=self.click1
+        (x2,y2)=self.click2
         if piece[1] =='p':
-            if self.click1[0]!=self.click2[0]:
+            if x1!=x2:
                 return False
-            if piece[2]==1 and self.click1[1]<=self.click2[1]:
+            if piece[2]==1 and y1<=y2:
                 return False
-            if piece[2]==0 and self.click1[1]>=self.click2[1]:
+            if piece[2]==0 and y1>=y2:
                 return False
             return True
+        if piece[1]=='t':
+            if x1==x2 and y1!=y2:
+                return True
+            if x1!=x2 and y1==y2:
+                return True
+            return False
+        if piece[1]=='d':
+            U=0
+            if x1==x2 and y1!=y2:
+                U+=1
+            elif x1!=x2 and y1==y2:
+                U+=1
+            elif fou :
+                U+=1
+            
+            if U!=1:
+                return False
+            return 
+        
         
 
 
@@ -113,7 +136,7 @@ class Chessboard:
         for i in range (8):
             for j in range(8):
                 Cas=self.cases[(i,j)]
-                if Cas[2]!='':
+                if Cas[1]!='':
                     self.drawbis(Cas[1],i,j,Cas[2]) #Nom pièce, position, couleur
 
     def drawbis(self,piece,x,y,Couleur):
