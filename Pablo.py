@@ -1,5 +1,8 @@
 #Dessin des pièces 
 #Pion dessin + restitution sous forme de fichier
+#Piece tt desssin
+#Dico de piece
+#Affichage en fonction du dico
 import pyxel
 import pathlib
 
@@ -16,6 +19,9 @@ class Chessboard:
         pyxel.init(LINES*SIDE,COLUMNS*SIDE,title = "Chess")
         pyxel.load("pions.pyxres")
         pyxel.mouse(True)
+        self.click1=None
+        self.click2=None
+        self.first_click_done=False
         self.cases=self.cases_ini()
         pyxel.run(self.update, self.draw)
 
@@ -23,7 +29,9 @@ class Chessboard:
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
+        self.draw()
         self.interaction()
+        
     def cases_ini(self):
         cases = {(x,y):[0,0,0] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc]
         y = 1
@@ -50,46 +58,32 @@ class Chessboard:
             cases[(x,y)]=[1,"f",1]
         cases[(3,y)]=[1,"d",1]
         cases[(4,y)]=[1,"r",1]
-        print(cases)
-    
+        return cases
+   
     def interaction(self):
-        L=[]
         if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
-            x1,y1=pyxel.mouse_x//16, pyxel.mouse_y//16
-            if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
-                x2,y2=pyxel.mouse_x//16, pyxel.mouse_y//16
-                piece=self.cases[(x1,y1)]
-                if coup_valid(self,piece[1],(x1,y1),(x2,y2))==1:
-                    self.cases[(x1,y1)]=[0,'',0]
-                    self.cases[(x2,y2)]=[1,pièce[1],pièce[2]]
-    
-    def coup_valid(self, piece,(x1,y1),(x2,y2)):
-        if (x1,y1)==(x2,y2):
-            return 0 #coup non valide
-        if piece[1]=='p': #modifier en cas de mangeage
-            if x2!=x1:
-                return 0
-            if piece[2]==1 and y2>=y1:
-                return 0
-            if piece[2]==0 and y2<=y1:
-                return 0
-            return 1
+            x,y=pyxel.mouse_x//16, pyxel.mouse_y//16
+            if not self.first_click_done:
+                self.click1=(x,y)
+                self.click2=None
+                self.first_click_done=True
+            else:
+                self.click2=(x,y)
+                self.first_click_done=False
+        
+
+
+
+
+
+
 
 
 
     def draw(self):
         pyxel.cls(0)
         self.draw_chessboard()
-        self.draw_white_pawns()
-        self.draw_black_pawns()
-        self.draw_white_tower()
-        self.draw_black_tower()
-        self.draw_white_horse()
-        self.draw_black_horse()
-        self.draw_white_bishop()
-        self.draw_black_bishop()
-        self.draw_white_monarchs()
-        self.draw_black_monarchs()
+        self.drawter()
     
     def draw_chessboard (self):
         for line in range(LINES):
@@ -100,19 +94,44 @@ class Chessboard:
                     color = WHITE
                 pyxel.rect(line*SIDE, col*SIDE, SIDE, SIDE, color)
 
-    def draw(self):
+    def drawter(self):
         for i in range (8):
             for j in range(8):
                 Cas=self.cases[(i,j)]
                 if Cas[2]!='':
-                    drawbis(Cas[2],i,j,Cas[3]) #Nom pièce, position, couleur
+                    self.drawbis(Cas[1],i,j,Cas[2]) #Nom pièce, position, couleur
 
-    def drawbis(piece,x,y,Couleur):
-        if piece=='p' and couleur==1:
-            draw_white_pawns(self,x,y)
-        elif piece=='p' and couleur==0:
-            draw_black_pawns(self,x,y)
-    
+    def drawbis(self,piece,x,y,Couleur):
+        if piece=='p':
+            if Couleur==1:
+                self.draw_white_pawns(x,y)
+            else:
+                self.draw_black_pawns(x,y)
+        if piece=='r':
+            if Couleur==1:
+                self.draw_white_king(x,y)
+            else:
+                self.draw_black_king(x,y)
+        if piece=='d':
+            if Couleur==1:
+                self.draw_white_queen(x,y)
+            else:
+                self.draw_black_queen(x,y)
+        if piece=='f':
+            if Couleur==1:
+                self.draw_white_bishop(x,y)
+            else:
+                self.draw_black_bishop(x,y)
+        if piece=='t':
+            if Couleur==1:
+                self.draw_white_tower(x,y)
+            else:
+                self.draw_black_tower(x,y)
+        if piece=='c':
+            if Couleur==1:
+                self.draw_white_horse(x,y)
+            else:
+                self.draw_black_horse(x,y)
     def draw_white_pawns(self,x,y):
         pyxel.blt(x*SIDE,y*SIDE,1,0,0,SIDE,SIDE, colkey=BLACK)
     def draw_black_pawns(self,x,y):
