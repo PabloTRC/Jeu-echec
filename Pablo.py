@@ -17,6 +17,8 @@ class Chessboard:
         pyxel.load("pions.pyxres")
         pyxel.mouse(True)
         pyxel.run(self.update, self.draw)
+        self.dico={(x,y):[0,0,0] for x in range(8) for y in range(8)}
+
     
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
@@ -24,11 +26,19 @@ class Chessboard:
         self.interaction()
     
     def interaction(self):
-        if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
-            (x,y)=pyxel.mouse_x//16, pyxel.mouse_y//16
-            print(x,y)
-
+        L=[]
         
+        if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
+            x1,y1=pyxel.mouse_x//16, pyxel.mouse_y//16
+            if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
+                x2,y2=pyxel.mouse_x//16, pyxel.mouse_y//16
+                pièce=dico[(x1,y1)]
+                #vérification coup valide
+                # SI oui
+    def coup_valid(self):
+        
+
+
 
     def draw(self):
         pyxel.cls(0)
