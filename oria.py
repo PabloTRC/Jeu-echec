@@ -10,13 +10,9 @@ cavalier,couleur,pos, en vie ou pas
 import numpy as np
 
 #moves
-moves = {r:[[1,0],[1,1]], d : [[1,0]], f : [[1,1]], t : [[1,0]], c : [[2,1],[1,2]]}
+moves = {"r":[(1,0),(-1,0),(1,1)(-1,1),(1,-1),(-1,-1),(0,1),(0,-1)], "d" : [[1,0]], "f" : [], "t" : [[1,0]], "c" : [[2,1],[1,2]]}
 
-class Deplacements: 
-
-    moves = {r:[[1,0],[1,1]], d : [[1,0]], f : [[1,1]], t : [[1,0]], c : [[2,1],[1,2]]}
-
-    def rev(L):
+def rev(L):
         L2 = []
         for e in L :
             L2.append(e)
@@ -27,13 +23,13 @@ class Deplacements:
 
 
     #avant de lancer deplac on verifie que le coup est dans possibles
-    def deplac(piece,coup):
+def deplac(piece,coup):
         if coup in verif_case(pos,piece):
             cases_prises[coup] = piece
             del cases_prises[piece[2]]
 
 
-    def verif_case(pos2,piece):
+def verif_case(pos2,piece):
         pos = piece[2]
         if not (coup[0] >= 0 and coup[0] <= 7 and coup[1] <=7 and coup[0]>=0) :
             return 0
@@ -45,7 +41,7 @@ class Deplacements:
                 return 2
 
 
-    def possibles(piece):
+def possibles(piece):
 
         poss = []
 
