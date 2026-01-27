@@ -272,41 +272,6 @@ class Chessboard:
                 if np.abs(y2-y1)!=1:
                           return False  
             return True
-    
-    def coup_valide(self):
-        (x1,y1)=self.click1
-        (x2,y2)=self.click2
-        moi=self.cases[self.click1]
-        pas_moi = self.cases[self.click2]
-        if moi[1]=="t" and (np.abs(y2-y1)>1 or np.abs(x2-x1)>1):
-            if y2-y1>0:
-                for i in range(1,y2-y1):
-                    if self.cases[(x1,y1+i)][0]==1:
-                        return False 
-            if y1-y2>0:
-                for i in range(1,y1-y2):
-                    if self.cases[(x1,y1-i)][0]==1:
-                        return False
-            if x2-x1>0:
-                for i in range(1,x2-x1):
-                    if self.cases[(x1+i,y1)][0]==1:
-                        return False 
-            if x1-x2>0:
-                for i in range(1,x1-x2):
-                    if self.cases[(x1-i,y1)][0]==1:
-                        return False
-            return True 
-        if moi[2]==pas_moi[2]:
-            return False
-        return True 
-
-
-
-
-
-
-
-
 
 
     def draw(self):
