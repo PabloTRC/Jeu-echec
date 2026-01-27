@@ -363,7 +363,7 @@ class Chessboard:
                 L2.append(-e[0],-e[1])
             return L2
 
-    def verif_case(pos2,piece):
+    def verif_case(coup,piece):
             pos = piece[2]
             if not (coup[0] >= 0 and coup[0] <= 7 and coup[1] <=7 and coup[0]>=0) :
                 return 0
@@ -382,18 +382,18 @@ class Chessboard:
             piece = [moi[1],moi[2],[x1,y1]]
 
             if piece[0] == 'c' or piece[0] == 'r':
-                for move in rev(moves[piece[0]]) :
-                    pos2 = np.array([pos]) + np.array([coup])
-                    if verif_case(pos2,piece()) >= 1 :
+                for move in self.rev(moves[piece[0]]) :
+                    pos2 = np.array([pos]) + np.array([move])
+                    if self.verif_case(pos2,piece()) >= 1 :
                         poss[pos2] = 0
             
             else :
-                for dir in rev(moves[piece[0]]):
-                    while np.array(pos2) != (np.array([pos]) + np.array([coup])):
+                for dir in self.rev(moves[piece[0]]):
+                    while np.array(pos2) != (np.array([pos]) + np.array([move])):
                         pos2 += dir
-                        if verif_case(pos2,piece()) >= 1 :
+                        if self.verif_case(pos2,piece()) >= 1 :
                             poss[pos2] = 0
-                        if verif_case(pos2,piece()) == 2 :
+                        if self.verif_case(pos2,piece()) == 2 :
                             continue
             
             return poss
@@ -406,7 +406,7 @@ class Chessboard:
             moi=self.cases[self.click1]
             pas_moi = self.cases[self.click2]
 
-            if [x2,y2] in possibles(moi,x1,y1):
+            if [x2,y2] in self.possibles(moi,x1,y1):
                 return True
             else :
                 return False
