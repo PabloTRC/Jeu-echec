@@ -186,7 +186,7 @@ class Chessboard:
               
         return True 
 
-def CV_T(self,x1,x2,y1,y2):
+    def CV_T(self,x1,x2,y1,y2):
         if y2-y1>0:
             for i in range(1,y2-y1):
                 if self.cases[(x1,y1+i)][0]==1:
