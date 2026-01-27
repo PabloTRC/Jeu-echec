@@ -49,9 +49,7 @@ def possibles(piece):
             if piece[1] == 0 :
                 
                 if piece[2][1] == 6 :
-
-
-
+                     
 
         if piece[0] == 'c' or piece[0] == 'r':
             for move in rev(moves[piece[0]]) :
@@ -67,3 +65,36 @@ def possibles(piece):
                         poss.append(pos2)
                     if verif_case(pos2,piece()) == 2 :
                         continue()
+
+
+
+
+def coup_valide(self):
+        (x1,y1)=self.click1
+        (x2,y2)=self.click2
+        moi=self.cases[self.click1]
+        pas_moi = self.cases[self.click2]
+        if moi[1]=="t" and (np.abs(y2-y1)>1 or np.abs(x2-x1)>1):
+            if y2-y1>0:
+                for i in range(1,y2-y1):
+                    if self.cases[(x1,y1+i)][0]==1:
+                        return False 
+            if y1-y2>0:
+                for i in range(1,y1-y2):
+                    if self.cases[(x1,y1-i)][0]==1:
+                        return False
+            if x2-x1>0:
+                for i in range(1,x2-x1):
+                    if self.cases[(x1+i,y1)][0]==1:
+                        return False 
+            if x1-x2>0:
+                for i in range(1,x1-x2):
+                    if self.cases[(x1-i,y1)][0]==1:
+                        return False
+            return True 
+        if moi[2]==pas_moi[2]:
+            return False
+        return True 
+
+
+helloo
