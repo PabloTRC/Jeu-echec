@@ -193,27 +193,62 @@ class Chessboard:
         (x2,y2)=self.click2
         moi=self.cases[self.click1]
         pas_moi = self.cases[self.click2]
-        if moi[1]=="t" and (np.abs(y2-y1)>1 or np.abs(x2-x1)>1):
-            if y2-y1>0:
-                for i in range(1,y2-y1):
-                    if self.cases[(x1,y1+i)][0]==1:
-                        return False 
-            if y1-y2>0:
-                for i in range(1,y1-y2):
-                    if self.cases[(x1,y1-i)][0]==1:
-                        return False
-            if x2-x1>0:
-                for i in range(1,x2-x1):
-                    if self.cases[(x1+i,y1)][0]==1:
-                        return False 
-            if x1-x2>0:
-                for i in range(1,x1-x2):
-                    if self.cases[(x1-i,y1)][0]==1:
-                        return False
-            return True 
         if moi[2]==pas_moi[2]:
             return False
+        if moi[1]=="t" and (np.abs(y2-y1)>1 or np.abs(x2-x1)>1):
+            return self.CV_T(x1,x2,y1,y2)
+        if moi[1]=="f":
+            return self.CV_F(x1,x2,y1,y2)
+              
         return True 
+
+    def CV_T(self,x1,x2,y1,y2):
+        if y2-y1>0:
+            for i in range(1,y2-y1):
+                if self.cases[(x1,y1+i)][0]==1:
+                    return False 
+        if y1-y2>0:
+            for i in range(1,y1-y2):
+                if self.cases[(x1,y1-i)][0]==1:
+                    return False
+        if x2-x1>0:
+            for i in range(1,x2-x1):
+                if self.cases[(x1+i,y1)][0]==1:
+                    return False 
+        if x1-x2>0:
+            for i in range(1,x1-x2):
+                if self.cases[(x1-i,y1)][0]==1:
+                    return False
+        return True
+    
+    def CV_F(self,x1,x2,y1,y2):
+        if x2-x1>0:
+            if y2-y1>0:
+                for i in range(1,x2-x1):
+                    for j in range(1,y2-y1):
+                        if self.cases[((x1+i),(y1+i))][0]==1:
+                            return False
+                return True
+            else :
+                for i in range(1,x2-x1):
+                    for j in range(1,y1-y2):
+                        if self.cases[((x1+i),(y1-i))][0]==1:
+                            return False
+                return True
+        elif x2-x1<0:
+            if y2-y1>0:
+                for i in range(1,x1-x2):
+                    for j in range(1,y2-y1):
+                        if self.cases[((x1-i),(y1+i))][0]==1:
+                            return False
+                return True
+            else :
+                for i in range(1,x1-x2):
+                    for j in range(1,y1-y2):
+                        if self.cases[((x1-i),(y1-i))][0]==1:
+                            return False
+                return True
+        return False
 
 
 
@@ -252,6 +287,7 @@ class Chessboard:
             pyxel.rect(x1*SIDE,y1*SIDE+15,5,1,8)
             pyxel.rect(x1*SIDE+11,y1*SIDE+15,5,1,8)
             pyxel.rect(x1*SIDE+15,y1*SIDE+11,1,5,8)
+        #mis en évidence des coups possibles
             
             
 
