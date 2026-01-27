@@ -1,7 +1,7 @@
 #[0 si non occupé/ 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc 3 si pas occupé, 0 pour le nombre de fois utilisé]
 
 
-moves = {"r":[(1,0),(-1,0),(1,1)(-1,1),(1,-1),(-1,-1),(0,1),(0,-1)], "d" : [[1,0]], "f" : [], "t" : [[1,0]], "c" : [[2,1],[1,2]]}
+moves = {"r":[(1,0),(1,1)], "d" : [(1,0),(1,1)], "f" : [], "t" : [[1,0]], "c" : [[2,1],[1,2]]}
 
 def rev(self,L):
         L2 = []
@@ -17,16 +17,18 @@ def verif_case(self,pos2,piece):
         if not (coup[0] >= 0 and coup[0] <= 7 and coup[1] <=7 and coup[0]>=0) :
             return 0
         
-        if not coup in cases_prises :
+        if cases[(coup[0],coup[1])][0] == 0 :
             return 1
         elif :
-            if cases_prises[coup][0] == piece[0]:
+            if cases[(coup[0],coup[1])][2] == piece[0]:
                 return 2
             
 
-def possibles(x,y):
+def possibles(moi,x1,y1):
         #si on a le temps on fera s'afficher la liste des cases possibles
         poss = {}
+
+        piece = [moi[1],moi[2],[x1,y1]]
 
         if piece[0] == 'c' or piece[0] == 'r':
             for move in rev(moves[piece[0]]) :
@@ -46,21 +48,29 @@ def possibles(x,y):
         return poss
 
 
-
-
 def coup_valide(self):
         (x1,y1)=self.click1
         (x2,y2)=self.click2
 
         moi=self.cases[self.click1]
         pas_moi = self.cases[self.click2]
-        
-        piece = [moi[1],moi[2],[x1,y1]]
 
-        if [x2,y2] in possibles(piece):
+        if [x2,y2] in possibles(moi,x1,y1):
             return True
         else :
             return False
+        
+
+
+def en_echec (couleur):
+    for x in range(7):
+        for y in range(7):
+            essai = cases[(x,y)]
+
+            if essai[1] == couleur + 1 or essai[1] == couleur - 1 :
+                if roi in possibles(essai,x,y):
+                     
+                     
 
 
 
