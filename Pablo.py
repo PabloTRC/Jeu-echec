@@ -109,6 +109,7 @@ class Chessboard:
                     self.Nombre_coups+=1
                     self.turn = "White"
 
+#Manière dont se déplacent les pièces
     def deplacement(self):
         piece=self.cases[self.click1]
         (x1,y1)=self.click1
@@ -187,7 +188,8 @@ class Chessboard:
                 if np.abs(y2-y1)!=1:
                           return False  
             return True
-    
+
+#Ne pas sauter au-dessus d'une pièce
     def coup_valide(self):
         (x1,y1)=self.click1
         (x2,y2)=self.click2
@@ -219,8 +221,7 @@ class Chessboard:
             for i in range(1,x1-x2):
                 if self.cases[(x1-i,y1)][0]==1:
                     return False
-        return True
-    
+        return True   
     def CV_F(self,x1,x2,y1,y2):
         if x2-x1>0:
             if y2-y1>0:
@@ -249,7 +250,6 @@ class Chessboard:
                             return False
                 return True
         return False
-    
     def CV_D(self,x1,x2,y1,y2):
         if self.CV_T(x1,x2,y1,y2):
             return True
