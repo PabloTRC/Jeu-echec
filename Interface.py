@@ -9,9 +9,7 @@ import numpy as np
 
 import pyxel 
 
-import sys
-sys.setrecursionlimit(2000)
-
+from oriane import possibles
 
 BLACK = 0
 WHITE = 7
@@ -288,6 +286,12 @@ class Chessboard:
             pyxel.rect(x1*SIDE+11,y1*SIDE+15,5,1,8)
             pyxel.rect(x1*SIDE+15,y1*SIDE+11,1,5,8)
         #mis en évidence des coups possibles
+        if self.first_click_done:
+            (x1,y1)=self.click1
+            L = list(possibles(self.cases[(x1,y1)],x1,y1).keys())
+            for pos in L : 
+                pyxel.circ(pos[0]*SIDE+8,pos[1]*SIDE+8,4,6)
+
             
             
 
