@@ -85,7 +85,7 @@ class Chessboard:
                     self.click2=(x,y)
                     self.first_click_done=False
             if self.click2!=None and self.cases[self.click1][2]==1:
-                if self.deplacement() and self.coup_valide():
+                if self.deplacement(self.click1,self.click2) and self.coup_valide(self.click1,self.click2):
                     self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
                     self.cases[self.click1]=[0,'',3,0]
                     self.Nombre_coups+=1
@@ -101,19 +101,18 @@ class Chessboard:
                     self.click2=(x,y)
                     self.first_click_done=False
             if self.click2!=None and self.cases[self.click1][2]==0:
-                if self.deplacement() and self.coup_valide():
+                if self.deplacement(self.click1,self.click2) and self.coup_valide(self.click1,self.click2):
                     self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
                     self.cases[self.click1]=[0,'',3,0]
                     self.Nombre_coups+=1
                     self.turn = "White"
 
 #Manière dont se déplacent les pièces
-    def deplacement(self):
-        piece=self.cases[self.click1]
-        (x1,y1)=self.click1
-        (x2,y2)=self.click2
-        if piece[1] =='p': #Pions
-            #détermine si le pion peut manger la pièce d'après lorsque qu'elle est en diagonale
+    def deplacement(self,L,P):
+        piece=self.cases[L]
+        x1,y1=L[0],L[1]
+        x2,y2=P[0],P[1]
+        if piece[1] =='p': #pions
             if piece[2] == 0 :
                 if (np.abs(x2-x1) == 1 and y2-y1==1) : 
                     if self.cases[(x2,y2)][2] == 1:
@@ -124,8 +123,7 @@ class Chessboard:
                     if self.cases[(x2,y2)][2] == 0:
                         return True 
                     return False
-            #le pion peut avancer de deux cases au premier tour, et une case ensuite   
-            if piece[3]==0: #1er tour
+            if piece[3]==0:
                 if x1!=x2:
                     return False
                 if piece[2]==1 and y1<=y2:
@@ -137,7 +135,7 @@ class Chessboard:
                 if self.cases[(x2,y2)][0]== 1 :
                     return False 
                 return True
-            else: #les autres tours
+            else: 
                 if x1!=x2:
                     return False
                 if piece[2]==1 and y1<=y2:
@@ -146,26 +144,26 @@ class Chessboard:
                     return False
                 if np.abs(y1-y2)>1:
                     return False
-                if self.cases[self.click2][0]==1:
+                if self.cases[(x2,y2)][0]==1:
                     return False
                 return True
-        if piece[1]=='t': #la Tour
+        if piece[1]=='t': #tour
             if x1==x2 and y1!=y2:
                 return True
             if x1!=x2 and y1==y2:
                 return True
             return False
-        if piece[1] == 'f': #le fou
+        if piece[1] == 'f': #fou
             if np.abs(x2-x1) != np.abs(y2 - y1) :
                 return False 
             return True
-        if piece[1] == 'r': #le roi
+        if piece[1] == 'r': #roi
             if (np.abs(x2-x1)!=0 and np.abs(x2-x1)!=1):
                 return False 
             if (np.abs(y2-y1)!=0 and np.abs(y2-y1)!=1):
                 return False
             return True 
-        if piece[1]=='d': #la dame 
+        if piece[1]=='d': #dame
             U=0
             if x1==x2 and y1!=y2:
                 U+=1
@@ -176,7 +174,7 @@ class Chessboard:
             if U!=1:
                 return False
             return True
-        if piece[1] == "c": #le cavalier
+        if piece[1] == "c": #cavalier
             if (np.abs(x2-x1)!=1 and np.abs(x2-x1)!=2):
                 return False 
             if (np.abs(y2-y1)!=1 and np.abs(y2-y1)!=2):
@@ -189,22 +187,21 @@ class Chessboard:
                           return False  
             return True
 
-#Ne pas sauter au-dessus d'une pièce    
-    def coup_valide(self):
-        (x1,y1)=self.click1
-        (x2,y2)=self.click2
-        moi=self.cases[self.click1]
-        pas_moi = self.cases[self.click2]
-        if moi[2]==pas_moi[2]: #on ne peut pas manger quelqu'un de son équipe
+#Ne pas sauter au-dessus d'une pièce
+    def coup_valide(self,L,P):
+        x1,y1=L[0],L[1]
+        x2,y2=P[0],P[1]
+        moi=self.cases[(x1,y1)]
+        pas_moi = self.cases[(x2,y2)] #on peut pas manger quelqu'un de son équipe
+        if moi[2]==pas_moi[2]:
             return False
         if moi[1]=="t" and (np.abs(y2-y1)>1 or np.abs(x2-x1)>1):
             return self.CV_T(x1,x2,y1,y2)
         if moi[1]=="f":
             return self.CV_F(x1,x2,y1,y2)
         if moi[1]=="d":
-            return self.CV_D(x1,x2,y1,y2)
-              
-        return True 
+            return self.CV_D(x1,x2,y1,y2)      
+        return True
 
 #coup valide pour la tour (la tour ne peut pas sauter au dessus de d'autres pièces)
     def CV_T(self,x1,x2,y1,y2): 
@@ -264,6 +261,14 @@ class Chessboard:
             return True
         return False
 
+    def coup_possibles(self,x1,y1):
+        CP=[]
+        for i in range(8):
+            for j in range(8):
+                if self.coup_valide((x1,y1),(i,j)) and self.deplacement((x1,y1),(i,j)):
+                    CP.append((i,j))
+        return CP
+
 
 
 
@@ -304,7 +309,10 @@ class Chessboard:
             pyxel.rect(x1*SIDE,y1*SIDE+15,5,1,8)
             pyxel.rect(x1*SIDE+11,y1*SIDE+15,5,1,8)
             pyxel.rect(x1*SIDE+15,y1*SIDE+11,1,5,8)
-    #mis en évidence des coups possibles
+            #mis en évidence des coups possibles
+            CP=self.coup_possibles(x1,y1)
+            for L in CP:
+                pyxel.circ(L[0]*SIDE+8,L[1]*SIDE+8,3,6)
         
 
             
