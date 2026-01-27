@@ -24,9 +24,11 @@ def verif_case(pos2,piece):
                 return 2
             
 
-def possibles(x,y):
+def possibles(moi,x1,y1):
         #si on a le temps on fera s'afficher la liste des cases possibles
         poss = {}
+
+        piece = [moi[1],moi[2],[x1,y1]]
 
         if piece[0] == 'c' or piece[0] == 'r':
             for move in rev(moves[piece[0]]) :
@@ -46,21 +48,26 @@ def possibles(x,y):
         return poss
 
 
-
-
 def coup_valide(self):
         (x1,y1)=self.click1
         (x2,y2)=self.click2
 
         moi=self.cases[self.click1]
         pas_moi = self.cases[self.click2]
-        
-        piece = [moi[1],moi[2],[x1,y1]]
 
-        if [x2,y2] in possibles(piece):
+        if [x2,y2] in possibles(moi,x1,y1):
             return True
         else :
             return False
+        
+
+
+def en_echec (couleur):
+    for i in range(7):
+        for j in range(7):
+            essai = cases[]
+            if essai[1] == couleur + 1 or essai[1] == couleur - 1 :
+                if essai in possibles()
 
 
 
