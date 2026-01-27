@@ -7,8 +7,6 @@ import pyxel
 import pathlib
 import numpy as np
 
-import pyxel 
-
 BLACK = 0
 WHITE = 7
 LINES = 8

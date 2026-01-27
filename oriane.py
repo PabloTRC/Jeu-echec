@@ -63,11 +63,14 @@ def coup_valide(self):
 
 
 def en_echec (couleur):
-    for i in range(7):
-        for j in range(7):
-            essai = cases[]
+    for x in range(7):
+        for y in range(7):
+            essai = cases[(x,y)]
+
             if essai[1] == couleur + 1 or essai[1] == couleur - 1 :
-                if essai in possibles()
+                if roi in possibles(essai,x,y):
+                     
+                     
 
 
 
