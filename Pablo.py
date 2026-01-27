@@ -118,6 +118,8 @@ class Chessboard:
                     return False
                 if np.abs(y1-y2)>2:
                     return False
+                if self.cases[(x2,y2)][0]==1:
+                    return False
                 return True
             else: 
                 if x1!=x2:
