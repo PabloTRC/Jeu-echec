@@ -266,7 +266,7 @@ class Chessboard:
                 for j in range(8):
                     if i!=x1 and j!=y1:
                         if self.coup_valide((x1,y1),(i,j)) and self.deplacement((x1,y1),(i,j)):
-                             CP.append((i,j))
+                            CP.append((i,j))
         return CP
                              
 

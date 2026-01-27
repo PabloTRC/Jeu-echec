@@ -1,6 +1,6 @@
 #[0 si non occupé/ 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc 3 si pas occupé, 0 pour le nombre de fois utilisé]
 
-
+from Pablo import Chessboard
 moves = {"r":[(1,0),(1,1)], "d" : [(1,0),(1,1)], "f" : [], "t" : [(1,0)], "c" : [(2,1),(1,2)]}
 
 def rev(L):
@@ -15,15 +15,17 @@ def rev(L):
 def verif_case(coup,piece): #coup = (x2,y2)
         pos = piece[2]
         if not board(coup) :
-            return 0
+            return 2
         
         if Chessboard.cases[coup][0] == 0 :
             return 1
         else :
             if Chessboard.cases[coup][2] == piece[0]:
                 return 2
+            else :
+                return 0
             
-def board((x,y)):
+def board(x,y):
     if x<=7 and y<=7 and x>=0 and y>=0 :
         return True
     return False
@@ -44,12 +46,16 @@ def possibles(moi,x1,y1):
                 pos2 = piece[2]
                 while board(pos2+dir) :
                     pos2 += dir
-                    if verif_case(pos2,piece) >= 1 :
+                    
+                    if verif_case(pos2,piece) == 1 :
                         poss[pos2] = 0
                     if verif_case(pos2,piece) == 2 :
                         continue
+                    if verif_case(pos2,piece) == 0 :
+                        poss[pos2] = 1
+                        continue
         
-        if piece[0] == 'p':
+        #if piece[0] == 'p':
              
 
 
