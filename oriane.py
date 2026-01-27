@@ -1,26 +1,30 @@
 #[0 si non occupé/ 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc 3 si pas occupé, 0 pour le nombre de fois utilisé]
-
+import numpy as np
 
 moves = {"r":[(1,0),(1,1)], "d" : [(1,0),(1,1)], "f" : [], "t" : [[1,0]], "c" : [[2,1],[1,2]]}
+from Pablo import Chessboard
 
 def rev(L):
         L2 = []
         for e in L :
             L2.append(e)
-            L2.append(e[0],-e[1])
-            L2.append(-e[0],e[1])
-            L2.append(-e[0],-e[1])
+            L2.append(e[0])
+            L2.append(-e[1])
+            L2.append(-e[0])
+            L2.append(e[1])
+            L2.append(-e[0])
+            L2.append(-e[1])
         return L2
 
-def verif_case(pos2,piece):
+def verif_case(coup,piece):
         pos = piece[2]
         if not (coup[0] >= 0 and coup[0] <= 7 and coup[1] <=7 and coup[0]>=0) :
             return 0
         
-        if cases[(coup[0],coup[1])][0] == 0 :
+        if Chessboard.cases[(coup[0],coup[1])][0] == 0 :
             return 1
-        elif :
-            if cases[(coup[0],coup[1])][2] == piece[0]:
+        else :
+            if Chessboard.cases[(coup[0],coup[1])][2] == piece[0]:
                 return 2
             
 
@@ -29,16 +33,17 @@ def possibles(moi,x1,y1):
         poss = {}
 
         piece = [moi[1],moi[2],[x1,y1]]
+        pos = [x1,y1]
 
         if piece[0] == 'c' or piece[0] == 'r':
             for move in rev(moves[piece[0]]) :
-                pos2 = np.array([pos]) + np.array([coup])
+                pos2 = np.array([pos]) + np.array([move])
                 if verif_case(pos2,piece()) >= 1 :
                     poss[pos2] = 0
         
         else :
             for dir in rev(moves[piece[0]]):
-                while np.array(pos2) != (np.array([pos]) + np.array([coup])):
+                while np.array(pos2) != (np.array([pos]) + np.array([move])):
                     pos2 += dir
                     if verif_case(pos2,piece()) >= 1 :
                         poss[pos2] = 0
@@ -61,14 +66,14 @@ def coup_valide(self):
             return False
         
 
-
+'''
 def en_echec (couleur):
     for x in range(7):
         for y in range(7):
-            essai = cases[(x,y)]
+            essai = Chessboard.cases[(x,y)]
 
             if essai[1] == couleur + 1 or essai[1] == couleur - 1 :
-                if roi in possibles(essai,x,y):
+                if roi in possibles(essai,x,y):'''
                      
                      
 
