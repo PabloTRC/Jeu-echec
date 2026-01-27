@@ -17,10 +17,10 @@ def verif_case(pos2,piece):
         if not (coup[0] >= 0 and coup[0] <= 7 and coup[1] <=7 and coup[0]>=0) :
             return 0
         
-        if not coup in cases_prises :
+        if cases[(coup[0],coup[1])][0] == 0 :
             return 1
         elif :
-            if cases_prises[coup][0] == piece[0]:
+            if cases[(coup[0],coup[1])][2] == piece[0]:
                 return 2
             
 
