@@ -269,12 +269,11 @@ class Chessboard:
 
 
 
-#Fonction dessiner étant donné un dictionnaire des cases à l'instant t
+#Fonction dessiner étant donné un dictionnaire des cases à l'instant t avec les pièces et les cases
     def draw(self):
         pyxel.cls(0)
         self.draw_chessboard()
-        self.drawter()
-    
+        self.drawter()    
     def draw_chessboard (self):
         for line in range(LINES):
             for col in range(COLUMNS):
@@ -298,15 +297,13 @@ class Chessboard:
             pyxel.rect(x1*SIDE,y1*SIDE+15,5,1,8)
             pyxel.rect(x1*SIDE+11,y1*SIDE+15,5,1,8)
             pyxel.rect(x1*SIDE+15,y1*SIDE+11,1,5,8)
-        #mis en évidence des coups possibles
-            
+        #mis en évidence des coups possibles         
     def drawter(self):
         for i in range (8):
             for j in range(8):
                 Cas=self.cases[(i,j)]
                 if Cas[1]!='':
                     self.drawbis(Cas[1],i,j,Cas[2]) #Nom pièce, position, couleur
-
     def drawbis(self,piece,x,y,Couleur):
         if piece=='p':
             if Couleur==1:
@@ -364,8 +361,6 @@ class Chessboard:
         pyxel.blt(x*SIDE,y*SIDE,0,2*SIDE,0,SIDE,SIDE, colkey=BLACK)
         
 
-    
-
-
+#Lancer le jeu
 if __name__ == "__main__":
     Chessboard()
