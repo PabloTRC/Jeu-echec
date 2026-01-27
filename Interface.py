@@ -83,6 +83,16 @@ class Chessboard:
         (x1,y1)=self.click1
         (x2,y2)=self.click2
         if piece[1] =='p': #A part
+            if piece[2] == 0 :
+                if (np.abs(x2-x1) == 1 and y2-y1==1) : 
+                    if self.cases[(x2,y2)][2] == 1:
+                        return True 
+                    return False
+            if piece[2] == 1 :
+                if (np.abs(x2-x1) == 1 and y1-y2==1) : 
+                    if self.cases[(x2,y2)][2] == 0:
+                        return True 
+                    return False
             if piece[3]==0:
                 if x1!=x2:
                     return False
