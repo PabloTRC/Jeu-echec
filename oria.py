@@ -351,6 +351,66 @@ class Chessboard:
     def draw_black_queen(self,x,y):
         pyxel.blt(x*SIDE,y*SIDE,0,2*SIDE,0,SIDE,SIDE, colkey=BLACK)
         
+        
+    moves = {"r":[(1,0),(1,1)], "d" : [(1,0),(1,1)], "f" : [], "t" : [[1,0]], "c" : [[2,1],[1,2]]}
+
+    def rev(L):
+            L2 = []
+            for e in L :
+                L2.append(e)
+                L2.append(e[0],-e[1])
+                L2.append(-e[0],e[1])
+                L2.append(-e[0],-e[1])
+            return L2
+
+    def verif_case(pos2,piece):
+            pos = piece[2]
+            if not (coup[0] >= 0 and coup[0] <= 7 and coup[1] <=7 and coup[0]>=0) :
+                return 0
+            
+            if cases[(coup[0],coup[1])][0] == 0 :
+                return 1
+            else :
+                if cases[(coup[0],coup[1])][2] == piece[0]:
+                    return 2
+                
+
+    def possibles(moi,x1,y1):
+            #si on a le temps on fera s'afficher la liste des cases possibles
+            poss = {}
+
+            piece = [moi[1],moi[2],[x1,y1]]
+
+            if piece[0] == 'c' or piece[0] == 'r':
+                for move in rev(moves[piece[0]]) :
+                    pos2 = np.array([pos]) + np.array([coup])
+                    if verif_case(pos2,piece()) >= 1 :
+                        poss[pos2] = 0
+            
+            else :
+                for dir in rev(moves[piece[0]]):
+                    while np.array(pos2) != (np.array([pos]) + np.array([coup])):
+                        pos2 += dir
+                        if verif_case(pos2,piece()) >= 1 :
+                            poss[pos2] = 0
+                        if verif_case(pos2,piece()) == 2 :
+                            continue
+            
+            return poss
+
+
+    def coup_valide(self):
+            (x1,y1)=self.click1
+            (x2,y2)=self.click2
+
+            moi=self.cases[self.click1]
+            pas_moi = self.cases[self.click2]
+
+            if [x2,y2] in possibles(moi,x1,y1):
+                return True
+            else :
+                return False
+            
 
     
 
@@ -359,63 +419,3 @@ if __name__ == "__main__":
     Chessboard()
 
 
-
-moves = {"r":[(1,0),(1,1)], "d" : [(1,0),(1,1)], "f" : [], "t" : [[1,0]], "c" : [[2,1],[1,2]]}
-
-def rev(L):
-        L2 = []
-        for e in L :
-            L2.append(e)
-            L2.append(e[0],-e[1])
-            L2.append(-e[0],e[1])
-            L2.append(-e[0],-e[1])
-        return L2
-
-def verif_case(pos2,piece):
-        pos = piece[2]
-        if not (coup[0] >= 0 and coup[0] <= 7 and coup[1] <=7 and coup[0]>=0) :
-            return 0
-        
-        if cases[(coup[0],coup[1])][0] == 0 :
-            return 1
-        else :
-            if cases[(coup[0],coup[1])][2] == piece[0]:
-                return 2
-            
-
-def possibles(moi,x1,y1):
-        #si on a le temps on fera s'afficher la liste des cases possibles
-        poss = {}
-
-        piece = [moi[1],moi[2],[x1,y1]]
-
-        if piece[0] == 'c' or piece[0] == 'r':
-            for move in rev(moves[piece[0]]) :
-                pos2 = np.array([pos]) + np.array([coup])
-                if verif_case(pos2,piece()) >= 1 :
-                    poss[pos2] = 0
-        
-        else :
-            for dir in rev(moves[piece[0]]):
-                while np.array(pos2) != (np.array([pos]) + np.array([coup])):
-                    pos2 += dir
-                    if verif_case(pos2,piece()) >= 1 :
-                        poss[pos2] = 0
-                    if verif_case(pos2,piece()) == 2 :
-                        continue
-        
-        return poss
-
-
-def coup_valide(self):
-        (x1,y1)=self.click1
-        (x2,y2)=self.click2
-
-        moi=self.cases[self.click1]
-        pas_moi = self.cases[self.click2]
-
-        if [x2,y2] in possibles(moi,x1,y1):
-            return True
-        else :
-            return False
-        
