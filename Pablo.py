@@ -90,7 +90,7 @@ class Chessboard:
                     self.click2=(x,y)
                     self.first_click_done=False
             if self.click2!=None and self.cases[self.click1][2]==1:
-                if self.deplacement() and self.coup_valide():
+                if self.deplacement(self.click1,self.click2) and self.coup_valide(self.click1,self.click2):
                     self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
                     self.cases[self.click1]=[0,'',3,0]
                     self.Nombre_coups+=1
@@ -106,17 +106,17 @@ class Chessboard:
                     self.click2=(x,y)
                     self.first_click_done=False
             if self.click2!=None and self.cases[self.click1][2]==0:
-                if self.deplacement() and self.coup_valide():
+                if self.deplacement(self.click1,self.click2) and self.coup_valide(self.click1,self.click2):
                     self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
                     self.cases[self.click1]=[0,'',3,0]
                     self.Nombre_coups+=1
                     self.turn = "White"
 
 #Manière dont se déplacent les pièces
-    def deplacement(self):
-        piece=self.cases[self.click1]
-        (x1,y1)=self.click1
-        (x2,y2)=self.click2
+    def deplacement(self,L,P):
+        piece=self.cases[L]
+        x1,y1=L[0],L[1]
+        x2,y2=P[0],P[1]
         if piece[1] =='p': #A part
             if piece[2] == 0 :
                 if (np.abs(x2-x1) == 1 and y2-y1==1) : 
@@ -193,11 +193,11 @@ class Chessboard:
             return True
 
 #Ne pas sauter au-dessus d'une pièce
-    def coup_valide(self):
-        (x1,y1)=self.click1
-        (x2,y2)=self.click2
-        moi=self.cases[self.click1]
-        pas_moi = self.cases[self.click2]
+    def coup_valide(self,L,P):
+        x1,y1=L[0],L[1]
+        x2,y2=P[0],P[1]
+        moi=self.cases[(x1,y1)]
+        pas_moi = self.cases[(x2,y2)]
         if moi[2]==pas_moi[2]:
             return False
         if moi[1]=="t" and (np.abs(y2-y1)>1 or np.abs(x2-x1)>1):
@@ -260,8 +260,17 @@ class Chessboard:
             return True
         return False
 
+    def coup_possibles(self,x1,y1):
+        CP=[]
+        for i in range(8):
+                for j in range(8):
+                    if i!=x1 and j!=y1:
+                        if self.coup_valide((x1,y1),(i,j)) and self.deplacement((x1,y1),(i,j)):
+                             CP.append((i,j))
+        return CP
+                             
 
-
+    
 
 
 
@@ -297,7 +306,13 @@ class Chessboard:
             pyxel.rect(x1*SIDE,y1*SIDE+15,5,1,8)
             pyxel.rect(x1*SIDE+11,y1*SIDE+15,5,1,8)
             pyxel.rect(x1*SIDE+15,y1*SIDE+11,1,5,8)
-        #mis en évidence des coups possibles         
+            CP=self.coup_possibles(x1,y1)
+            for L in CP:
+                 pyxel.circ(L[0]*SIDE+8,L[1]*SIDE+8,3,6)
+            
+            
+        #mis en évidence des coups possibles
+                 
     def drawter(self):
         for i in range (8):
             for j in range(8):
