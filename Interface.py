@@ -9,7 +9,8 @@ import numpy as np
 
 import pyxel 
 
-
+import sys
+sys.setrecursionlimit(2000)
 
 
 BLACK = 0
@@ -36,19 +37,14 @@ class Chessboard:
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
         if pyxel.btnp(pyxel.KEY_R):
-            self.restart()
+            self.click1=None
+            self.click2=None
+            self.Nombre_coups=0
+            self.first_click_done=False
+            self.cases = self.cases_ini()
+            self.turn = "White"
         self.draw()
         self.interaction()
-
-    def restart(self):
-        self.click1=None
-        self.click2=None
-        self.Nombre_coups=0
-        self.first_click_done=False
-        self.cases=self.cases_ini()
-        self.turn = "White"
-        pyxel.run(self.update, self.draw)
-
 
         
     def cases_ini(self):
