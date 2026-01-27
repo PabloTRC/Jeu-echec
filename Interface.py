@@ -9,6 +9,9 @@ import numpy as np
 
 import pyxel 
 
+
+
+
 BLACK = 0
 WHITE = 7
 LINES = 8
@@ -32,11 +35,24 @@ class Chessboard:
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
+        if pyxel.btnp(pyxel.KEY_R):
+            self.restart()
         self.draw()
         self.interaction()
+
+    def restart(self):
+        self.click1=None
+        self.click2=None
+        self.Nombre_coups=0
+        self.first_click_done=False
+        self.cases=self.cases_ini()
+        self.turn = "White"
+        pyxel.run(self.update, self.draw)
+
+
         
     def cases_ini(self):
-        cases = {(x,y):[0,'',3,0] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc 3 si pas occupé, 0 pour le nombre de fois utilisé]
+        cases = {(x,y):[0,'',3,0] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé; "nom de la pièce"; 0 si noir, 1 si blanc, 3 si pas occupé; 0 pour le nombre de fois utilisé]
         y = 1
         for x in range(LINES):
             cases[(x,y)] = [1,"p",0,0]
@@ -228,6 +244,8 @@ class Chessboard:
         pyxel.rect(0,COLUMNS*SIDE+2, LINES*SIDE, SIDE, 6)
         pyxel.rect(0,COLUMNS*SIDE,LINES*SIDE,2,0)
         pyxel.text(10,COLUMNS*SIDE+4,f"{self.turn}" "'s turn",0)
+        pyxel.text(10,COLUMNS*SIDE+10,"Press R to restart",0)
+        #surlignage des cases
         if self.first_click_done:
             (x1,y1)=self.click1
             pyxel.rect(x1*SIDE,y1*SIDE,5,1,8)
