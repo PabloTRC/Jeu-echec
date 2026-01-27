@@ -13,3 +13,11 @@ class gameboard
 Commande pour modifier un fichier pyxres : uvx pyxel edit "nom".pyxres
 Commande pour charger un fichier pyxres : pyxel.load()
 Documentation des Key : cf documentation pyxel 2023 TOUT à la fin
+
+
+A faire :
+- Régler le problème de saut de dame au-dessus de pièces sur sa propre ligne
+- Faire échec
+- Rock
+- IA
+- Menu 
