@@ -20,6 +20,8 @@ COLUMNS = 8
 SIDE = 16
 
 class Chessboard:
+
+#Initialisation des variables du chessboard
     def __init__(self):
         pyxel.init(LINES*SIDE,COLUMNS*SIDE + SIDE,title = "Chess")
         pyxel.load("pions.pyxres")
@@ -32,7 +34,7 @@ class Chessboard:
         self.turn = "White"
         pyxel.run(self.update, self.draw)
 
-    
+#fonction update du plateau qui prend en compte la réinitialisation au cas où on presse R, qui dessine etc...    
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
@@ -46,7 +48,7 @@ class Chessboard:
         self.draw()
         self.interaction()
 
-        
+#Initialisation du dictionnaire des cases du plateau d'échecs        
     def cases_ini(self):
         cases = {(x,y):[0,'',3,0] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé; "nom de la pièce"; 0 si noir, 1 si blanc, 3 si pas occupé; 0 pour le nombre de fois utilisé]
         y = 1
@@ -74,7 +76,8 @@ class Chessboard:
         cases[(3,y)]=[1,"d",1,0]
         cases[(4,y)]=[1,"r",1,0]
         return cases
-   
+
+#Click sur les différentes cases + alternance blancs noirs pour jouer + jeu effectif si coup valide   
     def interaction(self):
         if self.Nombre_coups%2==0:     
             if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
@@ -266,6 +269,7 @@ class Chessboard:
 
 
 
+#Fonction dessiner étant donné un dictionnaire des cases à l'instant t
     def draw(self):
         pyxel.cls(0)
         self.draw_chessboard()
@@ -296,10 +300,6 @@ class Chessboard:
             pyxel.rect(x1*SIDE+15,y1*SIDE+11,1,5,8)
         #mis en évidence des coups possibles
             
-            
-
-
-
     def drawter(self):
         for i in range (8):
             for j in range(8):
