@@ -437,7 +437,7 @@ def possibles(moi,x1,y1):
                     if verif_case(pos2,piece()) >= 1 :
                         poss[pos2] = 0
                     if verif_case(pos2,piece()) == 2 :
-                        continue()
+                        continue
         
         return poss
 
