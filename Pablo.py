@@ -311,8 +311,12 @@ class Chessboard:
             pyxel.rect(x1*SIDE+15,y1*SIDE+11,1,5,8)
             #mis en évidence des coups possibles
             CP=self.coup_possibles(x1,y1)
-            for L in CP:
-                pyxel.circ(L[0]*SIDE+8,L[1]*SIDE+8,3,6)
+            if self.turn=="Black" and self.cases[(x1,y1)][2]==0:
+                for L in CP:
+                    pyxel.circ(L[0]*SIDE+8,L[1]*SIDE+8,3,6)
+            elif self.turn=="White" and self.cases[(x1,y1)][2]==1:
+                for L in CP:
+                    pyxel.circ(L[0]*SIDE+8,L[1]*SIDE+8,3,6)
         
 
             
