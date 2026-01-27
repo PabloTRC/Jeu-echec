@@ -3,7 +3,7 @@
 
 moves = {"r":[(1,0),(1,1)], "d" : [(1,0),(1,1)], "f" : [], "t" : [[1,0]], "c" : [[2,1],[1,2]]}
 
-def rev(L):
+def rev(self,L):
         L2 = []
         for e in L :
             L2.append(e)
@@ -12,7 +12,7 @@ def rev(L):
             L2.append(-e[0],-e[1])
         return L2
 
-def verif_case(pos2,piece):
+def verif_case(self,pos2,piece):
         pos = piece[2]
         if not (coup[0] >= 0 and coup[0] <= 7 and coup[1] <=7 and coup[0]>=0) :
             return 0
