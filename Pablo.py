@@ -7,6 +7,12 @@ import pyxel
 import pathlib
 import numpy as np
 
+import pyxel 
+
+import sys
+sys.setrecursionlimit(2000)
+
+
 BLACK = 0
 WHITE = 7
 LINES = 8
@@ -15,7 +21,7 @@ SIDE = 16
 
 class Chessboard:
     def __init__(self):
-        pyxel.init(LINES*SIDE,COLUMNS*SIDE,title = "Chess")
+        pyxel.init(LINES*SIDE,COLUMNS*SIDE + SIDE,title = "Chess")
         pyxel.load("pions.pyxres")
         pyxel.mouse(True)
         self.click1=None
@@ -23,17 +29,26 @@ class Chessboard:
         self.Nombre_coups=0
         self.first_click_done=False
         self.cases=self.cases_ini()
-        self.moves={"r":[(1,0),(-1,0),(1,1),(-1,1),(1,-1),(-1,-1),(0,1),(0,-1)], "d" : [[1,0]], "f" : [], "t" : [[1,0]], "c" : [[2,1],[1,2]]}
+        self.turn = "White"
         pyxel.run(self.update, self.draw)
+
     
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
+        if pyxel.btnp(pyxel.KEY_R):
+            self.click1=None
+            self.click2=None
+            self.Nombre_coups=0
+            self.first_click_done=False
+            self.cases = self.cases_ini()
+            self.turn = "White"
         self.draw()
         self.interaction()
+
         
     def cases_ini(self):
-        cases = {(x,y):[0,'',3,0] for x in range(8) for y in range(8)} #[0 si non occupée, 1 si occupée, "nom de la pièce", 0 si noir 1 si blanc 3 si pas occupé, 0 pour le nombre de fois utilisé]
+        cases = {(x,y):[0,'',3,0] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé; "nom de la pièce"; 0 si noir, 1 si blanc, 3 si pas occupé; 0 pour le nombre de fois utilisé]
         y = 1
         for x in range(LINES):
             cases[(x,y)] = [1,"p",0,0]
@@ -76,6 +91,7 @@ class Chessboard:
                     self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
                     self.cases[self.click1]=[0,'',3,0]
                     self.Nombre_coups+=1
+                    self.turn = "Black"
         else:
             if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
                 x,y=pyxel.mouse_x//16, pyxel.mouse_y//16
@@ -91,6 +107,7 @@ class Chessboard:
                     self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
                     self.cases[self.click1]=[0,'',3,0]
                     self.Nombre_coups+=1
+                    self.turn = "White"
 
     def deplacement(self):
         piece=self.cases[self.click1]
@@ -116,8 +133,8 @@ class Chessboard:
                     return False
                 if np.abs(y1-y2)>2:
                     return False
-                if self.cases[(x2,y2)][0]==1:
-                    return False
+                if self.cases[(x2,y2)][0]== 1 :
+                    return False 
                 return True
             else: 
                 if x1!=x2:
@@ -170,8 +187,7 @@ class Chessboard:
                 if np.abs(y2-y1)!=1:
                           return False  
             return True
-        
-
+    
     def coup_valide(self):
         (x1,y1)=self.click1
         (x2,y2)=self.click2
@@ -183,9 +199,9 @@ class Chessboard:
             return self.CV_T(x1,x2,y1,y2)
         if moi[1]=="f":
             return self.CV_F(x1,x2,y1,y2)
-              
-        return True 
-
+        if moi[1]=="d":
+            return self.CV_D(x1,x2,y1,y2)      
+        return True
     def CV_T(self,x1,x2,y1,y2):
         if y2-y1>0:
             for i in range(1,y2-y1):
@@ -233,6 +249,21 @@ class Chessboard:
                             return False
                 return True
         return False
+    
+    def CV_D(self,x1,x2,y1,y2):
+        if self.CV_T(x1,x2,y1,y2):
+            return True
+        if self.CV_F(x1,x2,y1,y2):
+            return True
+        return False
+
+
+
+
+
+
+
+
 
 
     def draw(self):
@@ -248,6 +279,26 @@ class Chessboard:
                 else : 
                     color = WHITE
                 pyxel.rect(line*SIDE, col*SIDE, SIDE, SIDE, color)
+        pyxel.rect(0,COLUMNS*SIDE+2, LINES*SIDE, SIDE, 6)
+        pyxel.rect(0,COLUMNS*SIDE,LINES*SIDE,2,0)
+        pyxel.text(10,COLUMNS*SIDE+4,f"{self.turn}" "'s turn",0)
+        pyxel.text(10,COLUMNS*SIDE+10,"Press R to restart",0)
+        #surlignage des cases
+        if self.first_click_done:
+            (x1,y1)=self.click1
+            pyxel.rect(x1*SIDE,y1*SIDE,5,1,8)
+            pyxel.rect(x1*SIDE+11,y1*SIDE,5,1,8)
+            pyxel.rect(x1*SIDE,y1*SIDE,1,5,8)
+            pyxel.rect(x1*SIDE,y1*SIDE+11,1,5,8)
+            pyxel.rect(x1*SIDE+15,y1*SIDE,1,5,8)
+            pyxel.rect(x1*SIDE,y1*SIDE+15,5,1,8)
+            pyxel.rect(x1*SIDE+11,y1*SIDE+15,5,1,8)
+            pyxel.rect(x1*SIDE+15,y1*SIDE+11,1,5,8)
+        #mis en évidence des coups possibles
+            
+            
+
+
 
     def drawter(self):
         for i in range (8):
