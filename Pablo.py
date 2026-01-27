@@ -63,26 +63,52 @@ class Chessboard:
         return cases
    
     def interaction(self):
-        if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
-            x,y=pyxel.mouse_x//16, pyxel.mouse_y//16
-            if not self.first_click_done:
-                self.click1=(x,y)
-                self.click2=None
-                self.first_click_done=True
-            else:
-                self.click2=(x,y)
-                self.first_click_done=False
-        if self.click2!=None:
-            if self.deplacement() and self.coup_valide():
-                self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
-                self.cases[self.click1]=[0,'',3,0]
-                self.Nombre_coups+=1
+        if self.Nombre_coups%2==0:     
+            if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
+                x,y=pyxel.mouse_x//16, pyxel.mouse_y//16
+                if not self.first_click_done:
+                    self.click1=(x,y)
+                    self.click2=None
+                    self.first_click_done=True
+                else:
+                    self.click2=(x,y)
+                    self.first_click_done=False
+            if self.click2!=None and self.cases[self.click1][2]==1:
+                if self.deplacement() and self.coup_valide():
+                    self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
+                    self.cases[self.click1]=[0,'',3,0]
+                    self.Nombre_coups+=1
+        else:
+            if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
+                x,y=pyxel.mouse_x//16, pyxel.mouse_y//16
+                if not self.first_click_done:
+                    self.click1=(x,y)
+                    self.click2=None
+                    self.first_click_done=True
+                else:
+                    self.click2=(x,y)
+                    self.first_click_done=False
+            if self.click2!=None and self.cases[self.click1][2]==0:
+                if self.deplacement() and self.coup_valide():
+                    self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
+                    self.cases[self.click1]=[0,'',3,0]
+                    self.Nombre_coups+=1
 
     def deplacement(self):
         piece=self.cases[self.click1]
         (x1,y1)=self.click1
         (x2,y2)=self.click2
         if piece[1] =='p': #A part
+            if piece[2] == 0 :
+                if (np.abs(x2-x1) == 1 and y2-y1==1) : 
+                    if self.cases[(x2,y2)][2] == 1:
+                        return True 
+                    return False
+            if piece[2] == 1 :
+                if (np.abs(x2-x1) == 1 and y1-y2==1) : 
+                    if self.cases[(x2,y2)][2] == 0:
+                        return True 
+                    return False
             if piece[3]==0:
                 if x1!=x2:
                     return False
