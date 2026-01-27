@@ -172,8 +172,21 @@ class Chessboard:
             return True
         
 
+    def coup_valide(self):
+        (x1,y1)=self.click1
+        (x2,y2)=self.click2
+        moi=self.cases[self.click1]
+        pas_moi = self.cases[self.click2]
+        if moi[2]==pas_moi[2]:
+            return False
+        if moi[1]=="t" and (np.abs(y2-y1)>1 or np.abs(x2-x1)>1):
+            return self.CV_T(x1,x2,y1,y2)
+        if moi[1]=="f":
+            return self.CV_F(x1,x2,y1,y2)
+              
+        return True 
 
-    def CV_T(self,x1,x2,y1,y2):
+def CV_T(self,x1,x2,y1,y2):
         if y2-y1>0:
             for i in range(1,y2-y1):
                 if self.cases[(x1,y1+i)][0]==1:
@@ -220,30 +233,6 @@ class Chessboard:
                             return False
                 return True
         return False
-    def coup_valide(self):
-        (x1,y1)=self.click1
-        (x2,y2)=self.click2
-        moi=self.cases[self.click1]
-        pas_moi = self.cases[self.click2]
-        if moi[2]==pas_moi[2]:
-            return False
-        if moi[1]=="t" and (np.abs(y2-y1)>1 or np.abs(x2-x1)>1):
-            return self.CV_T(x1,x2,y1,y2)
-        if moi[1]=="f":
-            return self.CV_F(x1,x2,y1,y2)
-              
-        return True 
-
-
-
-
-
-
-
-
-
-
-
 
 
     def draw(self):
