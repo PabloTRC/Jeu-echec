@@ -19,5 +19,6 @@ A faire :
 - Régler le problème de saut de dame au-dessus de pièces sur sa propre ligne
 - Faire échec
 - Rock
+- En passant
 - IA
 - Menu 
