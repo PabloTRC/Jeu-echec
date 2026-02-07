@@ -1,6 +1,7 @@
 #[0 si non occupé/ 1 si occupé, "nom de la pièce", 0 si noir 1 si blanc 3 si pas occupé, 0 pour le nombre de fois utilisé]
 
 from Pablo import Chessboard
+
 moves = {"r":[(1,0),(1,1)], "d" : [(1,0),(1,1)], "f" : [], "t" : [(1,0)], "c" : [(2,1),(1,2)]}
 
 def rev(L):
@@ -25,7 +26,8 @@ def verif_case(coup,piece): #coup = (x2,y2)
             else :
                 return 0
             
-def board(x,y):
+def board(a):
+    (x,y) = a
     if x<=7 and y<=7 and x>=0 and y>=0 :
         return True
     return False
@@ -41,6 +43,46 @@ def possibles(moi,x1,y1):
                 if verif_case(pos2,piece()) >= 1 :
                     poss[pos2] = 0
         
+        elif piece[0] == 'p':
+            if piece[2] == 0 :
+                if (np.abs(x2-x1) == 1 and y2-y1==1) : 
+                    if self.cases[(x2,y2)][2] == 1:
+                        return True 
+                    return False
+            if piece[2] == 1 :
+                if (np.abs(x2-x1) == 1 and y1-y2==1) : 
+                    if self.cases[(x2,y2)][2] == 0:
+                        return True 
+                    return False
+            
+            #le pion peut avancer de deux cases au premier tour, et une case ensuite   
+            if piece[3]==0: #1er tour
+                if x1!=x2:
+                    return False
+                if piece[2]==1 and y1<=y2:
+                    return False
+                if piece[2]==0 and y1>=y2:
+                    return False
+                if np.abs(y1-y2)>2:
+                    return False
+                if self.cases[(x2,y2)][0]== 1 :
+                    return False
+                return True
+                #if prise en passant...
+
+            else: #les autres tours
+                if x1!=x2:
+                    return False
+                if piece[2]==1 and y1<=y2:
+                    return False
+                if piece[2]==0 and y1>=y2:
+                    return False
+                if np.abs(y1-y2)>1:
+                    return False
+                if self.cases[self.click2][0]==1:
+                    return False
+                return True
+
         else :
             for dir in rev(moves[piece[0]]):
                 pos2 = piece[2]
@@ -54,18 +96,7 @@ def possibles(moi,x1,y1):
                     if verif_case(pos2,piece) == 0 :
                         poss[pos2] = 1
                         continue
-        
-        #if piece[0] == 'p':
-             
-
-
-
-
-
-
-
-
-
+    
 
         return poss
 
