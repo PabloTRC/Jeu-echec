@@ -9,14 +9,19 @@ import numpy as np
 
 import pyxel 
 
+import sys
+sys.setrecursionlimit(2000)
+
+
 BLACK = 0
 WHITE = 7
 LINES = 8
 COLUMNS = 8
 SIDE = 16
 
-#Initialisation des variables du chessboard
 class Chessboard:
+
+#Initialisation des variables du chessboard
     def __init__(self):
         pyxel.init(LINES*SIDE,COLUMNS*SIDE + SIDE,title = "Chess")
         pyxel.load("pions.pyxres")
@@ -29,7 +34,7 @@ class Chessboard:
         self.turn = "White"
         pyxel.run(self.update, self.draw)
 
-#fonction update du plateau qui prend en compte la réinitialisation au cas où on presse R, qui dessine etc...  
+#fonction update du plateau qui prend en compte la réinitialisation au cas où on presse R, qui dessine etc...    
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q): #pour quitter le jeu (la croix fonctionne aussi)
             pyxel.quit()
@@ -43,24 +48,26 @@ class Chessboard:
         self.draw()
         self.interaction()
 
-#Initialisation du dictionnaire des cases du plateau d'échecs (position initiale au début du jeu)          
+#Initialisation du dictionnaire des cases du plateau d'échecs        
     def cases_ini(self):
         cases = {(x,y):[0,'',3,0] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé; "nom de la pièce"; 0 si noir, 1 si blanc, 3 si pas occupé; 0 pour le nombre de fois utilisé]
+        
+        #placement initial ligne par ligne
         y = 1
         for x in range(LINES):
-            cases[(x,y)] = [1,"p",0,0]
+            cases[(x,y)] = [1,"p",0,0] #p pour pion
         y = 6
         for x in range(LINES):
             cases[(x,y)] = [1,"p",1,0]
         y=0
         for x in [0,7]:
-            cases[(x,y)]=[1,"t",0,0]
+            cases[(x,y)]=[1,"t",0,0] #t pour tour
         for x in [1,6]:
-            cases[(x,y)]=[1,"c",0,0]
+            cases[(x,y)]=[1,"c",0,0] #cavalier
         for x in [2,5]:
-            cases[(x,y)]=[1,"f",0,0]
-        cases[(3,y)]=[1,"d",0,0]
-        cases[(4,y)]=[1,"r",0,0]
+            cases[(x,y)]=[1,"f",0,0] #fou
+        cases[(3,y)]=[1,"d",0,0] #dame
+        cases[(4,y)]=[1,"r",0,0] #roi
         y=7
         for x in [0,7]:
             cases[(x,y)]=[1,"t",1,0]
@@ -71,8 +78,8 @@ class Chessboard:
         cases[(3,y)]=[1,"d",1,0]
         cases[(4,y)]=[1,"r",1,0]
         return cases
-    
-#Click sur les différentes cases + alternance blancs noirs pour jouer + jeu effectif si coup valide    
+
+#Click sur les différentes cases + alternance blancs noirs pour jouer + jeu effectif si coup valide   
     def interaction(self):
         if self.Nombre_coups%2==0:     
             if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
@@ -107,12 +114,14 @@ class Chessboard:
                     self.Nombre_coups+=1
                     self.turn = "White"
 
-#Manière dont se déplacent les pièces
+    #Retourne True or false selon si le coup est dans la liste des coups possibles par piece
     def deplacement(self,L,P):
         piece=self.cases[L]
         x1,y1=L[0],L[1]
         x2,y2=P[0],P[1]
-        if piece[1] =='p': #pions
+
+
+        if piece[1] =='p': #A part
             if piece[2] == 0 :
                 if (np.abs(x2-x1) == 1 and y2-y1==1) : 
                     if self.cases[(x2,y2)][2] == 1:
@@ -147,23 +156,25 @@ class Chessboard:
                 if self.cases[(x2,y2)][0]==1:
                     return False
                 return True
-        if piece[1]=='t': #tour
-            if x1==x2 and y1!=y2:
+            
+
+        if piece[1] == 't':
+            if (x1==x2 and y1!=y2) or (x1!=x2 and y1==y2):
                 return True
-            if x1!=x2 and y1==y2:
+        
+        if piece[1] == 'f':
+            if np.abs(x2-x1)==np.abs(y2-y1) :
                 return True
-            return False
-        if piece[1] == 'f': #fou
-            if np.abs(x2-x1) != np.abs(y2 - y1) :
-                return False 
-            return True
-        if piece[1] == 'r': #roi
-            if (np.abs(x2-x1)!=0 and np.abs(x2-x1)!=1):
-                return False 
-            if (np.abs(y2-y1)!=0 and np.abs(y2-y1)!=1):
-                return False
-            return True 
-        if piece[1]=='d': #dame
+        
+        if piece[1] == 'r':
+            if (np.abs(x2-x1)<=1 and np.abs(y2-y1)<=1):
+                return True
+        
+        if piece[1]== 'd' :
+            if (x1==x2 and y1!=y2) or (x1!=x2 and y1==y2) or np.abs(x2-x1)==np.abs(y2-y1) :
+                return True
+
+            '''
             U=0
             if x1==x2 and y1!=y2:
                 U+=1
@@ -174,7 +185,9 @@ class Chessboard:
             if U!=1:
                 return False
             return True
-        if piece[1] == "c": #cavalier
+            '''
+
+        if piece[1] == "c":
             if (np.abs(x2-x1)!=1 and np.abs(x2-x1)!=2):
                 return False 
             if (np.abs(y2-y1)!=1 and np.abs(y2-y1)!=2):
@@ -186,25 +199,31 @@ class Chessboard:
                 if np.abs(y2-y1)!=1:
                           return False  
             return True
+    
+        return False
 
-#Ne pas sauter au-dessus d'une pièce
+    #Ne pas sauter au-dessus d'une pièce
     def coup_valide(self,L,P):
+
         x1,y1=L[0],L[1]
         x2,y2=P[0],P[1]
         moi=self.cases[(x1,y1)]
-        pas_moi = self.cases[(x2,y2)] #on peut pas manger quelqu'un de son équipe
-        if moi[2]==pas_moi[2]:
+        futur_moi = self.cases[(x2,y2)]
+
+        if moi[2]==futur_moi[2]:
             return False
+        
         if moi[1]=="t" and (np.abs(y2-y1)>1 or np.abs(x2-x1)>1):
             return self.CV_T(x1,x2,y1,y2)
         if moi[1]=="f":
             return self.CV_F(x1,x2,y1,y2)
         if moi[1]=="d":
-            return self.CV_D(x1,x2,y1,y2)      
+            return self.CV_D(x1,x2,y1,y2)
+          
         return True
-
-#coup valide pour la tour (la tour ne peut pas sauter au dessus de d'autres pièces)
-    def CV_T(self,x1,x2,y1,y2): 
+    
+    
+    def CV_T(self,x1,x2,y1,y2): #on déplace la tour ici case par case pour voir s'il n'y a pas de piece sur le chemin
         if y2-y1>0:
             for i in range(1,y2-y1):
                 if self.cases[(x1,y1+i)][0]==1:
@@ -223,8 +242,7 @@ class Chessboard:
                     return False
         return True
     
-#Coup valide pour le fou
-    def CV_F(self,x1,x2,y1,y2):
+    def CV_F(self,x1,x2,y1,y2): #de même pour chaque piece (sauf pour le roi et le cavalier qui n'ont pas le pb)
         if x2-x1>0:
             if y2-y1>0:
                 for i in range(1,x2-x1):
@@ -252,28 +270,24 @@ class Chessboard:
                             return False
                 return True
         return False
-
-#coup valide pour la dame 
-    def CV_D(self,x1,x2,y1,y2):
+    
+    def CV_D(self,x1,x2,y1,y2): #on réutilise les codes du fou et de la tour
         if self.CV_T(x1,x2,y1,y2):
             return True
         if self.CV_F(x1,x2,y1,y2):
             return True
         return False
 
-    def coup_possibles(self,x1,y1):
+    def coup_possibles(self,x1,y1): #on teste toute la liste des cases atteignables
         CP=[]
         for i in range(8):
-            for j in range(8):
-                if self.coup_valide((x1,y1),(i,j)) and self.deplacement((x1,y1),(i,j)):
-                    CP.append((i,j))
+                for j in range(8):
+                    if i!=x1 and j!=y1:
+                        if self.coup_valide((x1,y1),(i,j)) and self.deplacement((x1,y1),(i,j)):
+                            CP.append((i,j))
         return CP
-
-
-
-
-
-
+    
+    #def promotion
 
 
 
@@ -321,9 +335,8 @@ class Chessboard:
 
             
             
-
-
-
+        #mis en évidence des coups possibles
+                 
     def drawter(self):
         for i in range (8):
             for j in range(8):
@@ -331,7 +344,7 @@ class Chessboard:
                 if Cas[1]!='':
                     self.drawbis(Cas[1],i,j,Cas[2]) #Nom pièce, position, couleur
 
-    def drawbis(self,piece,x,y,Couleur):
+    def drawbis(self,piece,x,y,Couleur): #dessin d'une piece
         if piece=='p':
             if Couleur==1:
                 self.draw_white_pawns(x,y)
@@ -362,6 +375,7 @@ class Chessboard:
                 self.draw_white_horse(x,y)
             else:
                 self.draw_black_horse(x,y)
+                
     def draw_white_pawns(self,x,y):
         pyxel.blt(x*SIDE,y*SIDE,1,0,0,SIDE,SIDE, colkey=BLACK)
     def draw_black_pawns(self,x,y):
@@ -388,8 +402,6 @@ class Chessboard:
         pyxel.blt(x*SIDE,y*SIDE,0,2*SIDE,0,SIDE,SIDE, colkey=BLACK)
         
 
-    
-
-
+#Lancer le jeu
 if __name__ == "__main__":
     Chessboard()
