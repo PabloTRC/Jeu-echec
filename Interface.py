@@ -47,6 +47,8 @@ class Chessboard:
             self.Roix,self.Roiy = 0,0
         self.draw()
         self.interaction()
+        if self.echec : 
+            self.coup_possible_echec()
         
 
 #Initialisation du dictionnaire des cases du plateau d'échecs (position initiale au début du jeu)          
@@ -225,16 +227,6 @@ class Chessboard:
             return self.CV_D(x1,x2,y1,y2)      
         return True
 
-#traitement du roi lorsqu'il y a échec
-    def CV_R(self,x1,x2,y1,y2):
-        if self.echec :
-            for case in self.cases :
-                for cible in self.coup_possibles(case[0],case[1]) : 
-                    if cible == (x2,y2) :
-                        return False
-            self.echec = False 
-            return True
-
 #coup valide pour la tour (la tour ne peut pas sauter au dessus de d'autres pièces)
     def CV_T(self,x1,x2,y1,y2): 
         if self.echec :
@@ -300,6 +292,20 @@ class Chessboard:
                     CP.append((i,j))
         return CP
 
+#traitement du roi lorsqu'il y a échec
+    def coup_possible_echec(self):
+        x = self.Roix
+        y = self.Roiy
+        CP = self.coup_possibles(x,y)
+        for elt in CP:
+            for i in range(8) :
+                for j in range(8):
+                    for cible in self.coup_possibles(i,j) : 
+                        if cible == elt :
+                            return False
+        self.echec = False 
+        self.Roix,self.Roiy=(0,0)
+        return True
 
     
         
