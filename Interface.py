@@ -133,6 +133,8 @@ class Chessboard:
         x1,y1=L[0],L[1]
         x2,y2=P[0],P[1]
         if piece[1] =='p': #pions
+            if self.echec :
+                return False 
             if piece[2] == 0 :
                 if (np.abs(x2-x1) == 1 and y2-y1==1) : 
                     if self.cases[(x2,y2)][2] == 1:
@@ -167,7 +169,7 @@ class Chessboard:
                 if self.cases[(x2,y2)][0]==1:
                     return False
                 return True
-        if piece[1]=='t': #tour
+        if piece[1]=='t': #tour 
             if x1==x2 and y1!=y2:
                 return True
             if x1!=x2 and y1==y2:
@@ -223,8 +225,20 @@ class Chessboard:
             return self.CV_D(x1,x2,y1,y2)      
         return True
 
+#traitement du roi lorsqu'il y a échec
+    def CV_R(self,x1,x2,y1,y2):
+        if self.echec :
+            for case in self.cases :
+                for cible in self.coup_possibles(case[0],case[1]) : 
+                    if cible == (x2,y2) :
+                        return False
+            self.echec = False 
+            return True
+
 #coup valide pour la tour (la tour ne peut pas sauter au dessus de d'autres pièces)
     def CV_T(self,x1,x2,y1,y2): 
+        if self.echec :
+                return False 
         if y2-y1>0:
             for i in range(1,y2-y1):
                 if self.cases[(x1,y1+i)][0]==1:
@@ -245,6 +259,8 @@ class Chessboard:
     
 #Coup valide pour le fou
     def CV_F(self,x1,x2,y1,y2):
+        if self.echec :
+                return False 
         dx=x2-x1
         dy=y2-y1
         if np.abs(dx)!=np.abs(dy): #Vérification de la diagonale
@@ -265,6 +281,8 @@ class Chessboard:
 
 #Coup valide pour la dame 
     def CV_D(self,x1,x2,y1,y2):
+        if self.echec :
+                return False 
         # Cas où la dame se comporte comme une tour
         if x1==x2 or y1==y2:
             return self.CV_T(x1,x2,y1,y2)
@@ -283,12 +301,7 @@ class Chessboard:
         return CP
 
 
-    '''def Echec(self,x1,x2,y1,y2):
-        x,y = 0,0
-        for elt in self.coup_possibles(x2,y2):
-            if self.cases[elt][1]=="r" and self.cases[elt][2]==np.abs(1-self.cases[(x1,y1)][2]):
-                self.echec = True
-                self.Roix,self.Roiy = elt '''
+    
         
         
 

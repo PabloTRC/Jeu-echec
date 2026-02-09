@@ -16,7 +16,6 @@ COLUMNS = 8
 SIDE = 16
 
 #Initialisation des variables du chessboard
-
 class Chessboard:
     def __init__(self):
         pyxel.init(LINES*SIDE,COLUMNS*SIDE + SIDE,title = "Chess")
@@ -28,8 +27,6 @@ class Chessboard:
         self.first_click_done=False
         self.cases=self.cases_ini()
         self.turn = "White"
-        self.echec = False
-        self.Roix,self.Roiy = 0,0
         pyxel.run(self.update, self.draw)
 
 #fonction update du plateau qui prend en compte la réinitialisation au cas où on presse R, qui dessine etc...  
@@ -43,11 +40,8 @@ class Chessboard:
             self.first_click_done=False
             self.cases = self.cases_ini()
             self.turn = "White"
-            self.echec = False
-            self.Roix,self.Roiy = 0,0
         self.draw()
         self.interaction()
-        
 
 #Initialisation du dictionnaire des cases du plateau d'échecs (position initiale au début du jeu)          
     def cases_ini(self):
@@ -91,12 +85,9 @@ class Chessboard:
                     self.click2=(x,y)
                     self.first_click_done=False
             if self.click2!=None and self.cases[self.click1][2]==1:
-                x1,y1 = self.click1
-                x2,y2 = self.click2
                 if self.deplacement(self.click1,self.click2) and self.coup_valide(self.click1,self.click2):
                     self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
                     self.cases[self.click1]=[0,'',3,0]
-                    self.Echec(x1,x2,y1,y2)
                     self.Nombre_coups+=1
                     self.turn = "Black"
         else:
@@ -110,15 +101,11 @@ class Chessboard:
                     self.click2=(x,y)
                     self.first_click_done=False
             if self.click2!=None and self.cases[self.click1][2]==0:
-                x1,y1 = self.click1
-                x2,y2 = self.click2
                 if self.deplacement(self.click1,self.click2) and self.coup_valide(self.click1,self.click2):
                     self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
                     self.cases[self.click1]=[0,'',3,0]
-                    self.Echec(x1,x2,y1,y2)
                     self.Nombre_coups+=1
                     self.turn = "White"
-                    
 
 #Manière dont se déplacent les pièces
     def deplacement(self,L,P):
@@ -238,34 +225,41 @@ class Chessboard:
     
 #Coup valide pour le fou
     def CV_F(self,x1,x2,y1,y2):
-        dx=x2-x1
-        dy=y2-y1
-        if np.abs(dx)!=np.abs(dy): #Vérification de la diagonale
-            return False
-        step_x=1 if dx>0 else -1
-        step_y=1 if dy>0 else -1
-        x=x1+step_x
-        y=y1+step_y
-        # on vérifie toutes les cases avant la destination
-        while (x,y)!=(x2,y2):
-            if self.cases[(x,y)][0]==1:
-                return False
-            x+=step_x
-            y+=step_y
-        return True
-
-    
-
-#Coup valide pour la dame 
-    def CV_D(self,x1,x2,y1,y2):
-        # Cas où la dame se comporte comme une tour
-        if x1==x2 or y1==y2:
-            return self.CV_T(x1,x2,y1,y2)
-        # Cas où la dame se comporte comme un fou
-        if np.abs(x2-x1)==np.abs(y2-y1):
-            return self.CV_F(x1,x2,y1,y2)
+        if x2-x1>0:
+            if y2-y1>0:
+                for i in range(1,x2-x1):
+                    for j in range(1,y2-y1):
+                        if self.cases[((x1+i),(y1+i))][0]==1:
+                            return False
+                return True
+            else :
+                for i in range(1,x2-x1):
+                    for j in range(1,y1-y2):
+                        if self.cases[((x1+i),(y1-i))][0]==1:
+                            return False
+                return True
+        elif x2-x1<0:
+            if y2-y1>0:
+                for i in range(1,x1-x2):
+                    for j in range(1,y2-y1):
+                        if self.cases[((x1-i),(y1+i))][0]==1:
+                            return False
+                return True
+            else :
+                for i in range(1,x1-x2):
+                    for j in range(1,y1-y2):
+                        if self.cases[((x1-i),(y1-i))][0]==1:
+                            return False
+                return True
         return False
 
+#coup valide pour la dame 
+    def CV_D(self,x1,x2,y1,y2):
+        if self.CV_T(x1,x2,y1,y2):
+            return True
+        if self.CV_F(x1,x2,y1,y2):
+            return True
+        return False
 
     def coup_possibles(self,x1,y1):
         CP=[]
@@ -276,17 +270,6 @@ class Chessboard:
         return CP
 
 
-    def Echec(self,x1,x2,y1,y2):
-        x,y = 0,0
-        for elt in self.coup_possibles(x2,y2):
-            if self.cases[elt][1]=="r" and self.cases[elt][2]==np.abs(1-self.cases[(x1,y1)][2]):
-                self.echec = True
-                self.Roix,self.Roiy = elt 
-                break
-        else : 
-            self.echec = False  
-        return self.echec, self.Roix, self.Roiy
-        
 
 
 
@@ -300,8 +283,6 @@ class Chessboard:
         self.draw_chessboard()
         self.drawter()
         self.surlignage()
-        if self.echec == True :
-            self.surlignage_echec(self.Roix,self.Roiy)
     
     def draw_chessboard (self):
         for line in range(LINES):
@@ -335,14 +316,8 @@ class Chessboard:
                     pyxel.circ(L[0]*SIDE+8,L[1]*SIDE+8,3,6)
             elif self.turn=="White" and self.cases[(x1,y1)][2]==1:
                 for L in CP:
-                    pyxel.circ(L[0]*SIDE+8,L[1]*SIDE+8,3,6)  
+                    pyxel.circ(L[0]*SIDE+8,L[1]*SIDE+8,3,6)
         
-    def surlignage_echec(self,x,y):
-        pyxel.rect(x*SIDE,y*SIDE,16,1,8)
-        pyxel.rect(x*SIDE,y*SIDE,1,16,8)
-        pyxel.rect(x*SIDE,y*SIDE+15,16,1,8)
-        pyxel.rect(x*SIDE+15,y*SIDE,1,16,8)
-
 
             
             
