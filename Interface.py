@@ -96,9 +96,12 @@ class Chessboard:
                 if self.deplacement(self.click1,self.click2) and self.coup_valide(self.click1,self.click2):
                     self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
                     self.cases[self.click1]=[0,'',3,0]
-                    self.Echec(x1,x2,y1,y2)
                     self.Nombre_coups+=1
                     self.turn = "Black"
+                    for elt in self.coup_possibles(x2,y2):
+                        if self.cases[elt][1]=="r" and self.cases[elt][2]==0:
+                            self.echec = True 
+                            self.Roix,self.Roiy = elt
         else:
             if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) :
                 x,y=pyxel.mouse_x//16, pyxel.mouse_y//16
@@ -115,9 +118,13 @@ class Chessboard:
                 if self.deplacement(self.click1,self.click2) and self.coup_valide(self.click1,self.click2):
                     self.cases[self.click2]=[self.cases[self.click1][0],self.cases[self.click1][1],self.cases[self.click1][2],self.cases[self.click1][3]+1]
                     self.cases[self.click1]=[0,'',3,0]
-                    self.Echec(x1,x2,y1,y2)
                     self.Nombre_coups+=1
                     self.turn = "White"
+                    for elt in self.coup_possibles(x2,y2):
+                        if self.cases[elt][1]=="r" and self.cases[elt][2]==1:
+                            self.echec = True 
+                            self.Roix,self.Roiy = elt
+
                     
 
 #Manière dont se déplacent les pièces
@@ -238,41 +245,34 @@ class Chessboard:
     
 #Coup valide pour le fou
     def CV_F(self,x1,x2,y1,y2):
-        if x2-x1>0:
-            if y2-y1>0:
-                for i in range(1,x2-x1):
-                    for j in range(1,y2-y1):
-                        if self.cases[((x1+i),(y1+i))][0]==1:
-                            return False
-                return True
-            elif y2-y1<0 :
-                for i in range(1,x2-x1):
-                    for j in range(1,y1-y2):
-                        if self.cases[((x1+i),(y1-i))][0]==1:
-                            return False
-                return True
-        elif x2-x1<0:
-            if y2-y1>0:
-                for i in range(1,x1-x2):
-                    for j in range(1,y2-y1):
-                        if self.cases[((x1-i),(y1+i))][0]==1:
-                            return False
-                return True
-            else :
-                for i in range(1,x1-x2):
-                    for j in range(1,y1-y2):
-                        if self.cases[((x1-i),(y1-i))][0]==1:
-                            return False
-                return True
-        return False
+        dx=x2-x1
+        dy=y2-y1
+        if np.abs(dx)!=np.abs(dy): #Vérification de la diagonale
+            return False
+        step_x=1 if dx>0 else -1
+        step_y=1 if dy>0 else -1
+        x=x1+step_x
+        y=y1+step_y
+        # on vérifie toutes les cases avant la destination
+        while (x,y)!=(x2,y2):
+            if self.cases[(x,y)][0]==1:
+                return False
+            x+=step_x
+            y+=step_y
+        return True
 
-#coup valide pour la dame 
+    
+
+#Coup valide pour la dame 
     def CV_D(self,x1,x2,y1,y2):
-        if self.CV_T(x1,x2,y1,y2)== True:
-            return True
-        if self.CV_F(x1,x2,y1,y2) == True :
-            return True
+        # Cas où la dame se comporte comme une tour
+        if x1==x2 or y1==y2:
+            return self.CV_T(x1,x2,y1,y2)
+        # Cas où la dame se comporte comme un fou
+        if np.abs(x2-x1)==np.abs(y2-y1):
+            return self.CV_F(x1,x2,y1,y2)
         return False
+          
 
     def coup_possibles(self,x1,y1):
         CP=[]
@@ -283,16 +283,13 @@ class Chessboard:
         return CP
 
 
-    def Echec(self,x1,x2,y1,y2):
+    '''def Echec(self,x1,x2,y1,y2):
         x,y = 0,0
         for elt in self.coup_possibles(x2,y2):
             if self.cases[elt][1]=="r" and self.cases[elt][2]==np.abs(1-self.cases[(x1,y1)][2]):
                 self.echec = True
-                self.Roix,self.Roiy = elt 
-                break
-        else : 
-            self.echec = False  
-        return self.echec, self.Roix, self.Roiy
+                self.Roix,self.Roiy = elt '''
+        
         
 
 
