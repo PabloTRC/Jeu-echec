@@ -297,15 +297,14 @@ class Chessboard:
         x = self.Roix
         y = self.Roiy
         CP = self.coup_possibles(x,y)
+        CP_echec = []
         for elt in CP:
             for i in range(8) :
                 for j in range(8):
                     for cible in self.coup_possibles(i,j) : 
-                        if cible == elt :
-                            return False
-        self.echec = False 
-        self.Roix,self.Roiy=(0,0)
-        return True
+                        if cible != elt :
+                            CP_echec.append((i,j))
+        return CP_echec
 
     
         
