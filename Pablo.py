@@ -47,8 +47,8 @@ class Chessboard:
     def cases_ini(self):
         cases = {(x,y):[0,'',3,0] for x in range(8) for y in range(8)} #[0 si non occupé, 1 si occupé; "nom de la pièce"; 0 si noir, 1 si blanc, 3 si pas occupé; 0 pour le nombre de fois utilisé]
         y = 1
-        for x in range(LINES):
-            cases[(x,y)] = [1,"p",0,0]
+        for x in range(LINES):# on initialise ligne par ligne les pieces dans leur position de départ
+            cases[(x,y)] = [1,"p",0,0] #pion
         y = 6
         for x in range(LINES):
             cases[(x,y)] = [1,"p",1,0]
@@ -112,7 +112,8 @@ class Chessboard:
         piece=self.cases[L]
         x1,y1=L[0],L[1]
         x2,y2=P[0],P[1]
-        if piece[1] =='p': #pions
+
+        if piece[1] =='p': #A part
             if piece[2] == 0 :
                 if (np.abs(x2-x1) == 1 and y2-y1==1) : 
                     if self.cases[(x2,y2)][2] == 1:
@@ -147,23 +148,25 @@ class Chessboard:
                 if self.cases[(x2,y2)][0]==1:
                     return False
                 return True
-        if piece[1]=='t': #tour
-            if x1==x2 and y1!=y2:
+            
+
+        if piece[1] == 't':
+            if (x1==x2 and y1!=y2) or (x1!=x2 and y1==y2):
                 return True
-            if x1!=x2 and y1==y2:
+        
+        if piece[1] == 'f':
+            if np.abs(x2-x1)==np.abs(y2-y1) :
                 return True
-            return False
-        if piece[1] == 'f': #fou
-            if np.abs(x2-x1) != np.abs(y2 - y1) :
-                return False 
-            return True
-        if piece[1] == 'r': #roi
-            if (np.abs(x2-x1)!=0 and np.abs(x2-x1)!=1):
-                return False 
-            if (np.abs(y2-y1)!=0 and np.abs(y2-y1)!=1):
-                return False
-            return True 
-        if piece[1]=='d': #dame
+        
+        if piece[1] == 'r':
+            if (np.abs(x2-x1)<=1 and np.abs(y2-y1)<=1):
+                return True
+        
+        if piece[1]== 'd' :
+            if (x1==x2 and y1!=y2) or (x1!=x2 and y1==y2) or np.abs(x2-x1)==np.abs(y2-y1) :
+                return True
+
+            '''
             U=0
             if x1==x2 and y1!=y2:
                 U+=1
@@ -174,7 +177,9 @@ class Chessboard:
             if U!=1:
                 return False
             return True
-        if piece[1] == "c": #cavalier
+            '''
+
+        if piece[1] == "c":
             if (np.abs(x2-x1)!=1 and np.abs(x2-x1)!=2):
                 return False 
             if (np.abs(y2-y1)!=1 and np.abs(y2-y1)!=2):
@@ -186,6 +191,8 @@ class Chessboard:
                 if np.abs(y2-y1)!=1:
                           return False  
             return True
+    
+        return False
 
 #Ne pas sauter au-dessus d'une pièce
     def coup_valide(self,L,P):

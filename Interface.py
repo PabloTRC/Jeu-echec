@@ -134,9 +134,8 @@ class Chessboard:
         piece=self.cases[L]
         x1,y1=L[0],L[1]
         x2,y2=P[0],P[1]
-        if piece[1] =='p': #pions
-            if self.echec :
-                return False 
+
+        if piece[1] =='p': #A part
             if piece[2] == 0 :
                 if (np.abs(x2-x1) == 1 and y2-y1==1) : 
                     if self.cases[(x2,y2)][2] == 1:
@@ -171,23 +170,25 @@ class Chessboard:
                 if self.cases[(x2,y2)][0]==1:
                     return False
                 return True
-        if piece[1]=='t': #tour 
-            if x1==x2 and y1!=y2:
+            
+
+        if piece[1] == 't':
+            if (x1==x2 and y1!=y2) or (x1!=x2 and y1==y2):
                 return True
-            if x1!=x2 and y1==y2:
+        
+        if piece[1] == 'f':
+            if np.abs(x2-x1)==np.abs(y2-y1) :
                 return True
-            return False
-        if piece[1] == 'f': #fou
-            if np.abs(x2-x1) != np.abs(y2 - y1) :
-                return False 
-            return True
-        if piece[1] == 'r': #roi
-            if (np.abs(x2-x1)!=0 and np.abs(x2-x1)!=1):
-                return False 
-            if (np.abs(y2-y1)!=0 and np.abs(y2-y1)!=1):
-                return False
-            return True 
-        if piece[1]=='d': #dame
+        
+        if piece[1] == 'r':
+            if (np.abs(x2-x1)<=1 and np.abs(y2-y1)<=1):
+                return True
+        
+        if piece[1]== 'd' :
+            if (x1==x2 and y1!=y2) or (x1!=x2 and y1==y2) or np.abs(x2-x1)==np.abs(y2-y1) :
+                return True
+
+            '''
             U=0
             if x1==x2 and y1!=y2:
                 U+=1
@@ -198,7 +199,9 @@ class Chessboard:
             if U!=1:
                 return False
             return True
-        if piece[1] == "c": #cavalier
+            '''
+
+        if piece[1] == "c":
             if (np.abs(x2-x1)!=1 and np.abs(x2-x1)!=2):
                 return False 
             if (np.abs(y2-y1)!=1 and np.abs(y2-y1)!=2):
@@ -210,6 +213,8 @@ class Chessboard:
                 if np.abs(y2-y1)!=1:
                           return False  
             return True
+    
+        return False
 
 #Ne pas sauter au-dessus d'une pièce
     def coup_valide(self,L,P):
@@ -294,6 +299,7 @@ class Chessboard:
 
 #traitement du roi lorsqu'il y a échec
     def coup_possible_echec(self):
+        '''
         x = self.Roix
         y = self.Roiy
         CP = self.coup_possibles(x,y)
@@ -305,6 +311,8 @@ class Chessboard:
                         if cible != elt :
                             CP_echec.append((i,j))
         return CP_echec
+        '''
+        
 
     
         
